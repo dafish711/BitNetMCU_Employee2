@@ -545,9 +545,9 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     
     history ={
         "train_loss": [],
-        "train_accuracy": [],
         "test_loss": [],
-        "test_accuracy": [],
+        "train_acc": [],
+        "test_acc": [],
     }
 
     for epoch in range(num_epochs):
