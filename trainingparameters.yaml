@@ -52,8 +52,8 @@
 # runtag: "octav" # runtag is prefix for runname
 
 dataset: IMAGEFOLDER
-train_folder: training_set
-test_folder: testing_set
+train_folder: '/content/drive/MyDrive/Custom_Dataset/training_set'
+test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
 num_classes: 10
 
 model: CNNMNIST
