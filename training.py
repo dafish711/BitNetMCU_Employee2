@@ -679,8 +679,19 @@ def build_imagefolder_dataset(hyperparameters):
     if not os.path.isdir(test_dir):
         raise FileNotFoundError(f"Testing folder not found: {test_dir}")
 
-    mean = tuple(hyperparameters.get("mean", [0.5]))
-    std = tuple(hyperparameters.get("std", [0.5]))
+    mean = hyperparameters.get("mean", [0.5])
+    std = hyperparameters.get("std", [0.5])
+    
+    # ensure tuple of floats
+    if isinstance(mean, (float, int)):
+        mean = (float(mean),)
+    else:
+        mean = tuple(mean)
+
+    if isinstance(std, (float, int)):
+        std = (float(std),)
+    else:
+        std = tuple(std)
 
     transform = transforms.Compose([
         transforms.Grayscale(num_output_channels=1),
