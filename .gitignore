@@ -1,0 +1,27 @@
+# training data
+data/
+runs/
+runs_opt/
+backup/
+batchtest/
+*.obj
+*.dll
+*.exp
+*.lib
+*.exe
+*.hex
+*.elf
+*.bin
+*.map
+*.o
+*.lst
+*.bkp
+*.pdf
+*.log
+*.elog
+# python cache
+__pycache__/
+venv/
+# ides
+.vscode/
+.idea/
