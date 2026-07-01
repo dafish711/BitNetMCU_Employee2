@@ -70,7 +70,7 @@ network_width3: 0
 
 num_epochs: 100
 batch_size: 16
-learning_rate: 0.005
+learning_rate: 0.0005
 
 scheduler: Cosine
 step_size: 20
