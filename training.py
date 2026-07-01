@@ -679,9 +679,9 @@ def build_imagefolder_dataset(hyperparameters):
     if not os.path.isdir(test_dir):
         raise FileNotFoundError(f"Testing folder not found: {test_dir}")
 
-    mean = hyperparameters.get("mean", [0.4360])
-    std = hyperparameters.get("std", [0.1722])
-    
+    mean = hyperparameters.get("mean", [0.4333])
+    std = hyperparameters.get("std", [0.1472])
+
     # ensure tuple of floats
     if isinstance(mean, (float, int)):
         mean = (float(mean),)
@@ -767,7 +767,7 @@ if __name__ == "__main__":
 
     elif dataset_name == "MNIST":
         num_classes = 10
-        mean, std = (0.1307,), (0.3081,)
+        mean, std = (0.4333,), (0.1472,)
 
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
