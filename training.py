@@ -545,7 +545,9 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     writer = SummaryWriter(log_dir=f"runs/{runname}-{now_str}")
 
     best_test_acc = 0.0
+    best_test_loss = float("inf")
     best_state = None
+    best_epoch_line = None
     totalbits = 0
     
     history ={
@@ -637,10 +639,21 @@ def train_model(model, device, hyperparameters, train_data, test_data):
                 correct += (predicted == labels).sum().item()
 
         testaccuracy = correct / total * 100
+        mean_test_loss = np.mean(test_losses)
 
-        if testaccuracy > best_test_acc:
+        if (testaccuracy > best_test_acc) or (
+            testaccuracy == best_test_acc and mean_test_loss < best_test_loss
+        ):
             best_test_acc = testaccuracy
+            best_test_loss = mean_test_loss
             best_state = model.state_dict()
+            best_epoch_line =(
+                f"Epoch [{epoch + 1}/{num_epochs}], "
+                f"LTrain:{np.mean(train_losses):.6f} "
+                f"ATrain:{trainaccuracy:.2f}% "
+                f"LTest:{np.mean(test_losses):.6f} "
+                f"ATest:{testaccuracy:.2f}% "
+            )
 
         activity = log_positive_activations(model, writer, epoch, all_test_images, batch_size)
 
