@@ -287,7 +287,7 @@ def get_transform(hyperparameters):
         std = tuple(std)
 
     return transforms.Compose([
-        transforms.grayscale(num_output_channels=1),  # Ensure single channel for MNIST/EMNIST
+        transforms.Grayscale(num_output_channels=1),  # Ensure single channel for MNIST/EMNIST
         transforms.Resize((16, 16)),  # adjust if needed
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
