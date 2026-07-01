@@ -79,8 +79,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 13
-rotation2: 13
+rotation1: 10
+rotation2: 10
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
