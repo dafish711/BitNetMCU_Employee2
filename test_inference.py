@@ -287,6 +287,7 @@ def get_transform(hyperparameters):
         std = tuple(std)
 
     return transforms.Compose([
+        transforms.grayscale(num_output_channels=1),  # Ensure single channel for MNIST/EMNIST
         transforms.Resize((16, 16)),  # adjust if needed
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
@@ -316,6 +317,7 @@ def build_test_dataset(hyperparameters):
 
     elif dataset_name == "MNIST":
         transform = transforms.Compose([
+            transforms.Grayscale(num_output_channels=1),
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
             transforms.Normalize((0.4360,), (0.1722,)),
