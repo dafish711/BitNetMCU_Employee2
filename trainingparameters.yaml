@@ -68,7 +68,7 @@ network_width2: 64
 network_width3: 0
 #cnn_width: 64
 
-num_epochs: 100
+num_epochs: 120
 batch_size: 16
 learning_rate: 0.0005
 
@@ -79,8 +79,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 15
-rotation2: 15
+rotation1: 20
+rotation2: 20
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
@@ -89,7 +89,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 75
+maxw_update_until_epoch: 85
 maxw_quantscale: 0.25
 
 mean: 0.4333
