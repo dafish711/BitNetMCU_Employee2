@@ -299,7 +299,7 @@ def build_test_dataset(hyperparameters):
     transform = get_transform(hyperparameters)
 
     if dataset_name == "IMAGEFOLDER":
-        test_dir = hyperparameters.get("test_folder", "testing_set")
+        test_dir = hyperparameters.get("validation_folder", "validation_set")
 
         if not os.path.isdir(test_dir):
             raise FileNotFoundError(f"Testing folder not found: {test_dir}")
