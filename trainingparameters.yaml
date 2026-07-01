@@ -56,7 +56,7 @@ train_folder: '/content/drive/MyDrive/Custom_Dataset/training_set'
 test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
 num_classes: 10
 
-model: CNNMNIST
+model: FCMNIST
 runtag: face10
 
 QuantType: 4bitsym
@@ -68,9 +68,9 @@ network_width2: 64
 network_width3: 0
 cnn_width: 64
 
-num_epochs: 80
+num_epochs: 100
 batch_size: 16
-learning_rate: 0.001
+learning_rate: 0.0005
 
 scheduler: Cosine
 step_size: 20
@@ -89,7 +89,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 60
+maxw_update_until_epoch: 75
 maxw_quantscale: 0.25
 
 mean: 0.4333
