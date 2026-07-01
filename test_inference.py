@@ -276,7 +276,6 @@ def get_transform(hyperparameters):
     mean = hyperparameters.get("mean", [0.4360])
     std = hyperparameters.get("std", [0.1722])
 
-    # ensure tuple of floats
     if isinstance(mean, (float, int)):
         mean = (float(mean),)
     else:
@@ -286,6 +285,12 @@ def get_transform(hyperparameters):
         std = (float(std),)
     else:
         std = tuple(std)
+
+    return transforms.Compose([
+        transforms.Resize((16, 16)),  # adjust if needed
+        transforms.ToTensor(),
+        transforms.Normalize(mean, std)
+    ])
 
 
 def build_test_dataset(hyperparameters):
@@ -313,7 +318,7 @@ def build_test_dataset(hyperparameters):
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,)),
+            transforms.Normalize((0.4360,), (0.1722,)),
         ])
 
         test_data = datasets.MNIST(root="data", train=False, transform=transform, download=True)
