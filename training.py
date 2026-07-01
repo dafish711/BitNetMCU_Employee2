@@ -718,6 +718,7 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     numofweights = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
     print(f"Best Test Accuracy: {best_test_acc:.2f}%")
+    print(f"Best Epoch: {best_epoch_line}")
     print(f"TotalBits: {totalbits} TotalBytes: {totalbits / 8.0}")
 
     writer.add_hparams(
