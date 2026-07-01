@@ -357,7 +357,45 @@ import yaml
 from torchsummary import summary
 import importlib
 from models import MaskingLayer
+import matplotlib
+matplotlib.use('Agg')  # Use a non-interactive backend for matplotlib
+import matplotlib.pyplot as plt
 
+# ----------------------------------------------
+# Graph plotting function for training curves
+# ----------------------------------------------
+
+def plot_training_curves(history, runname, out_dir="modeldata"):
+    epochs = range(1, len(history["train_loss"]) + 1)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    ax1.plot(epochs, history["train_loss"], label="Train Loss")
+    ax1.plot(epochs, history["test_loss"], label="Test Loss")
+    ax1.set_xlabel("Epoch")
+    ax1.set_ylabel("Loss")
+    ax1.set_title("Loss vs Epoch")
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+
+    ax2.plot(epochs, history["train_acc"], label="Train Accuracy")
+    ax2.plot(epochs, history["test_acc"], label="Test Accuracy")
+    ax2.set_xlabel("Epoch")
+    ax2.set_ylabel("Accuracy (%)")
+    ax2.set_title("Accuracy vs Epoch")
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+
+    fig.suptitle(runname)
+    fig.tight_layout()
+
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, f"{runname}_curves.png")
+    fig.savefig(out_path, dpi=150)
+    plt.close(fig)
+
+    print(f"Saved training curves: {out_path}")
+    return out_path
 
 # ----------------------------------------------
 # BitNetMCU training
@@ -504,6 +542,13 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     best_test_acc = 0.0
     best_state = None
     totalbits = 0
+    
+    history ={
+        "train_loss": [],
+        "train_accuracy": [],
+        "test_loss": [],
+        "test_accuracy": [],
+    }
 
     for epoch in range(num_epochs):
         model.train()
@@ -646,6 +691,11 @@ def train_model(model, device, hyperparameters, train_data, test_data):
         writer.add_scalar("Accuracy/test", testaccuracy, epoch + 1)
         writer.add_scalar("learning_rate", optimizer.param_groups[0]["lr"], epoch + 1)
         writer.flush()
+        
+        history["train_loss"].append(np.mean(train_losses))
+        history["test_loss"].append(np.mean(test_losses))
+        history["train_acc"].append(trainaccuracy)
+        history["test_acc"].append(testaccuracy)
 
     numofweights = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
@@ -663,6 +713,8 @@ def train_model(model, device, hyperparameters, train_data, test_data):
             "Loss/test": np.mean(test_losses),
         },
     )
+    
+    plot_training_curves(history, runname)
 
     writer.close()
 

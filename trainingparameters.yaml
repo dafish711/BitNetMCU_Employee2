@@ -59,7 +59,7 @@ num_classes: 10
 model: FCMNIST
 runtag: face10
 
-QuantType: 4bitsym
+QuantType: 2bitsym
 NormType: RMS
 WScale: PerTensor
 
@@ -79,8 +79,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 10
-rotation2: 10
+rotation1: 12
+rotation2: 12
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
