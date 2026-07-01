@@ -679,8 +679,8 @@ def build_imagefolder_dataset(hyperparameters):
     if not os.path.isdir(test_dir):
         raise FileNotFoundError(f"Testing folder not found: {test_dir}")
 
-    mean = hyperparameters.get("mean", [0.5])
-    std = hyperparameters.get("std", [0.5])
+    mean = hyperparameters.get("mean", [0.4360])
+    std = hyperparameters.get("std", [0.1722])
     
     # ensure tuple of floats
     if isinstance(mean, (float, int)):

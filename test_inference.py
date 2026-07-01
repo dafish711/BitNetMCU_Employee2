@@ -273,15 +273,19 @@ def load_class_mapping(runname):
 
 
 def get_transform(hyperparameters):
-    mean = tuple(hyperparameters.get("mean", [0.5]))
-    std = tuple(hyperparameters.get("std", [0.5]))
+    mean = hyperparameters.get("mean", [0.4360])
+    std = hyperparameters.get("std", [0.1722])
 
-    return transforms.Compose([
-        transforms.Grayscale(num_output_channels=1),
-        transforms.Resize((16, 16)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std),
-    ])
+    # ensure tuple of floats
+    if isinstance(mean, (float, int)):
+        mean = (float(mean),)
+    else:
+        mean = tuple(mean)
+
+    if isinstance(std, (float, int)):
+        std = (float(std),)
+    else:
+        std = tuple(std)
 
 
 def build_test_dataset(hyperparameters):
