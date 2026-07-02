@@ -64,12 +64,12 @@ QuantType: 4bitsym
 NormType: RMS
 WScale: PerTensor
 
-network_width1: 96
-network_width2: 64
+network_width1: 64
+network_width2: 32
 network_width3: 0
 #cnn_width: 64
 
-num_epochs: 120
+num_epochs: 180
 batch_size: 16
 learning_rate: 0.0005
 
@@ -80,8 +80,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 15
-rotation2: 15
+rotation1: 8
+rotation2: 8
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
@@ -90,7 +90,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 85
+maxw_update_until_epoch: 120
 maxw_quantscale: 0.25
 
 mean: 0.4333

@@ -742,7 +742,7 @@ def train_model(model, device, hyperparameters, train_data, test_data):
 
 def build_imagefolder_dataset(hyperparameters):
     train_dir = hyperparameters.get("train_folder", "training_set")
-    test_dir = hyperparameters.get("test_folder", "testing_set")
+    test_dir = hyperparameters.get("validation_folder", "validation_set")
 
     if not os.path.isdir(train_dir):
         raise FileNotFoundError(f"Training folder not found: {train_dir}")
