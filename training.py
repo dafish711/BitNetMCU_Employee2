@@ -22,6 +22,7 @@ matplotlib.use('Agg')  # Use a non-interactive backend for matplotlib
 import matplotlib.pyplot as plt
 from torch.utils.data import Subset
 from sklearn.model_selection import StratifiedKFold
+import sys
 
 # StratifiedKFold
 def build_imagefolder_kfold_datasets(hyperparameters, fold_index):
@@ -589,7 +590,7 @@ if __name__ == "__main__":
             torch.save(best_state, f"modeldata/{runname}.pth")
             print(f"Saved fold model: modeldata/{runname}.pth")
 
-        exit()
+        sys.exit(0)
 
     dataset_name = hyperparameters.get("dataset", "IMAGEFOLDER").upper()
 

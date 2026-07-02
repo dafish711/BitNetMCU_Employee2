@@ -69,7 +69,7 @@ network_width2: 64
 network_width3: 0
 #cnn_width: 64
 
-num_epochs: 120
+num_epochs: 80
 batch_size: 16
 learning_rate: 0.0005
 
@@ -90,7 +90,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 85
+maxw_update_until_epoch: 55
 maxw_quantscale: 0.25
 
 mean: 0.4333
@@ -98,5 +98,5 @@ std: 0.1472
 
 best_loss_min_delta: 0.01
 kfold: true
-k_folds: 5
+k_folds: 4
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/trainval_set"
