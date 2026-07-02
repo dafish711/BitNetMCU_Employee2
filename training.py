@@ -290,7 +290,7 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     optimizer = optim.Adam(
         model.parameters(), 
         lr=learning_rate,
-        weight_decay=hyperparameters.get("weight decay", 0.0)
+        weight_decay=hyperparameters.get("weight_decay", 0.0)
     )
 
     if hyperparameters["scheduler"] == "StepLR":
@@ -312,7 +312,7 @@ def train_model(model, device, hyperparameters, train_data, test_data):
         raise ValueError("Invalid scheduler")
 
     criterion = nn.CrossEntropyLoss(
-        label_smoothing=hyperparameters.get("label smoothing", 0.0)
+        label_smoothing=hyperparameters.get("label_smoothing", 0.0)
     )
 
     os.makedirs("runs", exist_ok=True)
@@ -774,25 +774,82 @@ if __name__ == "__main__":
             "class_mapping": f"modeldata/{runname}_class_to_idx.json",
             "used_params": f"modeldata/{runname}_used_params.yaml",
         },
+
         "dataset": {
+            "dataset": hyperparameters.get("dataset"),
+            "train_folder": hyperparameters.get("train_folder"),
+            "validation_folder": hyperparameters.get("validation_folder"),
+            "test_folder": hyperparameters.get("test_folder"),
             "num_classes": num_classes,
             "class_to_idx": class_to_idx,
+            "mean": hyperparameters.get("mean"),
+            "std": hyperparameters.get("std"),
         },
+
         "model": {
-            "name": hyperparameters["model"],
-            "quant_type": hyperparameters["QuantType"],
-            "norm_type": hyperparameters["NormType"],
-            "weight_scale": hyperparameters["WScale"],
-            "network_width1": hyperparameters["network_width1"],
-            "network_width2": hyperparameters["network_width2"],
-            "network_width3": hyperparameters["network_width3"],
+            "model": hyperparameters.get("model"),
+            "runtag": hyperparameters.get("runtag"),
+            "QuantType": hyperparameters.get("QuantType"),
+            "NormType": hyperparameters.get("NormType"),
+            "WScale": hyperparameters.get("WScale"),
+            "network_width1": hyperparameters.get("network_width1"),
+            "network_width2": hyperparameters.get("network_width2"),
+            "network_width3": hyperparameters.get("network_width3"),
+            "cnn_width": hyperparameters.get("cnn_width"),
         },
+
         "training": {
-            "num_epochs": hyperparameters["num_epochs"],
-            "batch_size": hyperparameters["batch_size"],
-            "learning_rate": hyperparameters["learning_rate"],
-            "scheduler": hyperparameters["scheduler"],
-            "augmentation": hyperparameters["augmentation"],
+            "num_epochs": hyperparameters.get("num_epochs"),
+            "batch_size": hyperparameters.get("batch_size"),
+            "learning_rate": hyperparameters.get("learning_rate"),
+            "label_smoothing": hyperparameters.get("label_smoothing", 0.0),
+            "weight_decay": hyperparameters.get("weight_decay", 0.0),
+            "best_loss_min_delta": hyperparameters.get("best_loss_min_delta"),
+            "seed": hyperparameters.get("seed"),
+            "deterministic": hyperparameters.get("deterministic"),
+        },
+
+        "scheduler": {
+            "scheduler": hyperparameters.get("scheduler"),
+            "step_size": hyperparameters.get("step_size"),
+            "lr_decay": hyperparameters.get("lr_decay"),
+            "T_0": hyperparameters.get("T_0"),
+            "T_mult": hyperparameters.get("T_mult"),
+        },
+
+        "augmentation": {
+            "augmentation": hyperparameters.get("augmentation"),
+            "rotation1": hyperparameters.get("rotation1"),
+            "rotation2": hyperparameters.get("rotation2"),
+            "elastictransformprobability": hyperparameters.get("elastictransformprobability"),
+            "horizontal_flip": hyperparameters.get("horizontal_flip"),
+            "horizontal_flip_prob": hyperparameters.get("horizontal_flip_prob"),
+            "color_jitter": hyperparameters.get("color_jitter"),
+            "brightness": hyperparameters.get("brightness"),
+            "contrast": hyperparameters.get("contrast"),
+            "random_erasing": hyperparameters.get("random_erasing"),
+            "random_erasing_prob": hyperparameters.get("random_erasing_prob"),
+            "random_erasing_scale_min": hyperparameters.get("random_erasing_scale_min"),
+            "random_erasing_scale_max": hyperparameters.get("random_erasing_scale_max"),
+        },
+
+        "regularization_pruning": {
+            "lambda_l1": hyperparameters.get("lambda_l1"),
+            "prune_epoch": hyperparameters.get("prune_epoch"),
+            "prune_groupstoprune": hyperparameters.get("prune_groupstoprune"),
+            "prune_totalgroups": hyperparameters.get("prune_totalgroups"),
+        },
+
+        "maxw": {
+            "maxw_algo": hyperparameters.get("maxw_algo"),
+            "maxw_update_until_epoch": hyperparameters.get("maxw_update_until_epoch"),
+            "maxw_quantscale": hyperparameters.get("maxw_quantscale"),
+        },
+
+        "kfold": {
+            "kfold": hyperparameters.get("kfold"),
+            "k_folds": hyperparameters.get("k_folds"),
+            "kfold_folder": hyperparameters.get("kfold_folder"),
         },
     }
 

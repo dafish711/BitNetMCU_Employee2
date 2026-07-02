@@ -12,7 +12,7 @@ NormType: RMS
 WScale: PerTensor
 
 network_width1: 96
-network_width2: 64
+network_width2: 96
 network_width3: 0
 #cnn_width: 64
 
@@ -61,8 +61,8 @@ kfold: False
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
-label smoothing: 0.005
-weight decay: 0.0001
+label_smoothing: 0.005
+weight_decay: 0.0001
 
 seed: 670
 deterministic: true
