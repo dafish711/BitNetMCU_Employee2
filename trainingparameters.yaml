@@ -11,8 +11,8 @@ QuantType: 4bitsym
 NormType: RMS
 WScale: PerTensor
 
-network_width1: 96
-network_width2: 96
+network_width1: 64
+network_width2: 64
 network_width3: 32
 #cnn_width: 64
 
@@ -27,18 +27,18 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 11
-rotation2: 11
+rotation1: 8
+rotation2: 8
 elastictransformprobability: 0.0
 
 horizontal_flip: true
-horizontal_flip_prob: 0.3
+horizontal_flip_prob: 0.15
 
 color_jitter: true
 brightness: 0.1
 contrast: 0.1
 
-random_erasing: true
+random_erasing: false
 random_erasing_prob: 0.1
 random_erasing_scale_min: 0.02
 random_erasing_scale_max: 0.08
@@ -61,7 +61,7 @@ kfold: False
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
-label_smoothing: 0.005
+label_smoothing: 0.02
 weight_decay: 0.0001
 
 seed: 670
