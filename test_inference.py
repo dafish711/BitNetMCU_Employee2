@@ -273,8 +273,8 @@ def load_class_mapping(runname):
 
 
 def get_transform(hyperparameters):
-    mean = hyperparameters.get("mean", [0.4333])
-    std = hyperparameters.get("std", [0.1472])
+    mean = hyperparameters.get("mean", [0.4286])
+    std = hyperparameters.get("std", [0.1461])
 
     if isinstance(mean, (float, int)):
         mean = (float(mean),)
@@ -320,7 +320,7 @@ def build_test_dataset(hyperparameters):
             transforms.Grayscale(num_output_channels=1),
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize((0.4333,), (0.1472,)),
+            transforms.Normalize((0.4286,), (0.1461,)),
         ])
 
         test_data = datasets.MNIST(root="data", train=False, transform=transform, download=True)

@@ -46,8 +46,8 @@ def build_imagefolder_kfold_datasets(hyperparameters, fold_index):
     k_folds = hyperparameters.get("k_folds", 5)
     seed = hyperparameters.get("seed", 1234)
 
-    mean = hyperparameters.get("mean", [0.4333])
-    std = hyperparameters.get("std", [0.1472])
+    mean = hyperparameters.get("mean", [0.4286])
+    std = hyperparameters.get("std", [0.1461])
 
     if isinstance(mean, (float, int)):
         mean = (float(mean),)
@@ -530,8 +530,8 @@ def build_imagefolder_dataset(hyperparameters):
     if not os.path.isdir(test_dir):
         raise FileNotFoundError(f"Testing folder not found: {test_dir}")
 
-    mean = hyperparameters.get("mean", [0.4333])
-    std = hyperparameters.get("std", [0.1472])
+    mean = hyperparameters.get("mean", [0.4286])
+    std = hyperparameters.get("std", [0.1461])
 
     # ensure tuple of floats
     if isinstance(mean, (float, int)):
@@ -686,7 +686,7 @@ if __name__ == "__main__":
 
     elif dataset_name == "MNIST":
         num_classes = 10
-        mean, std = (0.4333,), (0.1472,)
+        mean, std = (0.4286,), (0.1461,)
 
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
