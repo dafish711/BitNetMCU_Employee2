@@ -65,7 +65,7 @@ NormType: RMS
 WScale: PerTensor
 
 network_width1: 64
-network_width2: 32
+network_width2: 64
 network_width3: 0
 #cnn_width: 64
 
@@ -80,8 +80,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 8
-rotation2: 8
+rotation1: 5
+rotation2: 5
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
