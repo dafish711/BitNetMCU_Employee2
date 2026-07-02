@@ -90,7 +90,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch:85
+maxw_update_until_epoch: 85
 maxw_quantscale: 0.25
 
 mean: 0.4333
