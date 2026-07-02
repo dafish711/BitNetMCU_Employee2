@@ -592,7 +592,10 @@ def build_imagefolder_dataset(hyperparameters):
             aug_list.append(
                 transforms.RandomErasing(
                     p=hyperparameters.get("random_erasing_prob", 0.1),
-                    scale=tuple(hyperparameters.get("random_erasing_scale", [0.02, 0.08])),
+                    scale=(
+                        hyperparameters.get("random_erasing_scale_min", 0.02), 
+                        hyperparameters.get("random_erasing_scale_max", 0.08)
+                    ),
                     ratio=(0.3, 3.3),
                     value=0,
                 )
