@@ -60,13 +60,13 @@ num_classes: 10
 model: FCMNIST
 runtag: face10
 
-QuantType: 4bitsym
+QuantType: 8bit
 NormType: RMS
 WScale: PerTensor
 
-network_width1: 96
-network_width2: 64
-network_width3: 0
+network_width1: 128
+network_width2: 96
+network_width3: 64
 #cnn_width: 64
 
 num_epochs: 80
@@ -80,8 +80,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 10
-rotation2: 10
+rotation1: 15
+rotation2: 15
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
@@ -90,7 +90,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 55
+maxw_update_until_epoch: 60
 maxw_quantscale: 0.25
 
 mean: 0.4333
