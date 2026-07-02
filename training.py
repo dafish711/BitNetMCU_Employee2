@@ -24,6 +24,22 @@ from torch.utils.data import Subset
 from sklearn.model_selection import StratifiedKFold
 import sys
 
+
+# Seed helper function
+def seed_everything(seed, deterministic=True):
+    os.environ["PYTHONHASHSEED"] = str(seed)
+
+    random.seed(seed)
+    np.random.seed(seed)
+
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+    if deterministic:
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+        torch.use_deterministic_algorithms(True, warn_only=True)
+
 # StratifiedKFold
 def build_imagefolder_kfold_datasets(hyperparameters, fold_index):
     root_dir = hyperparameters["kfold_folder"]
@@ -226,6 +242,17 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     runname = create_run_name(hyperparameters)
 
     batch_size = hyperparameters["batch_size"]
+    
+    seed = hyperparameters.get("seed", )
+
+    loader_generator = torch.Generator()
+    loader_generator.manual_seed(seed)
+
+    def seed_worker(worker_id):
+        worker_seed = seed + worker_id
+        random.seed(worker_seed)
+        np.random.seed(worker_seed)
+        torch.manual_seed(worker_seed)
 
     if hyperparameters["augmentation"]:
         train_loader = DataLoader(
@@ -234,14 +261,28 @@ def train_model(model, device, hyperparameters, train_data, test_data):
             shuffle=True,
             num_workers=0,
             pin_memory=True,
+            generator=loader_generator,
+            worker_init_fn=seed_worker,
         )
     else:
-        train_loader = DataLoader(train_data, batch_size=len(train_data), shuffle=False)
+        train_loader = DataLoader(
+            train_data, 
+            batch_size=len(train_data), 
+            shuffle=False,
+            generator=loader_generator,
+            worker_init_fn=seed_worker,
+        )
         entire_dataset = next(iter(train_loader))
         all_train_images = entire_dataset[0].to(device)
         all_train_labels = entire_dataset[1].to(device)
 
-    test_loader = DataLoader(test_data, batch_size=len(test_data), shuffle=False)
+    test_loader = DataLoader(
+        test_data, 
+        batch_size=len(test_data), 
+        shuffle=False,
+        generator = loader_generator,
+        worker_init_fn=seed_worker
+    )
     entire_dataset = next(iter(test_loader))
     all_test_images = entire_dataset[0].to(device)
     all_test_labels = entire_dataset[1].to(device)
@@ -557,6 +598,12 @@ if __name__ == "__main__":
 
     with open(paramname) as f:
         hyperparameters = yaml.safe_load(f)
+        
+    seed = hyperparameters.get("seed", )
+    deterministic = hyperparameters.get("deterministic", True)
+
+    seed_everything(seed, deterministic)
+    print(f"Seed: {seed}")
 
     runname = create_run_name(hyperparameters)
     print(runname)
