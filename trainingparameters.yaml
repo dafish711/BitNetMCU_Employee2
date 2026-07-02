@@ -11,7 +11,7 @@ QuantType: 4bitsym
 NormType: RMS
 WScale: PerTensor
 
-network_width1: 96
+network_width1: 64
 network_width2: 64
 network_width3: 0
 #cnn_width: 64
@@ -64,4 +64,5 @@ kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 seed: 670
 deterministic: true
 
-#Decent seed = 420, 67
+# Decent seed = 420, 67
+# Good run but unstable 670
