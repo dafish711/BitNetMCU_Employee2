@@ -96,5 +96,7 @@ maxw_quantscale: 0.25
 mean: 0.4333
 std: 0.1472
 
-pretrained_model: modeldata/octav_FC_Olivetti_Aug_BitMnist_4bitsym_width96_64_0_epochs80.pth
 best_loss_min_delta: 0.01
+kfold: true
+k_folds: 5
+kfold_folder: "/content/drive/MyDrive/Custom_Dataset/trainval_set"
