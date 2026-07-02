@@ -918,3 +918,37 @@ if __name__ == "__main__":
 
     print(f"Saved: modeldata/{runname}.pth")
     print(f"Saved: modeldata/{runname}_class_to_idx.json")
+    
+    manifest = {
+        "runname": runname,
+        "files": {
+            "model": f"modeldata/{runname}.pth",
+            "class_mapping": f"modeldata/{runname}_class_to_idx.json",
+            "used_params": f"modeldata/{runname}_used_params.yaml",
+        },
+        "dataset": {
+            "num_classes": num_classes,
+            "class_to_idx": class_to_idx,
+        },
+        "model": {
+            "name": hyperparameters["model"],
+            "quant_type": hyperparameters["QuantType"],
+            "norm_type": hyperparameters["NormType"],
+            "weight_scale": hyperparameters["WScale"],
+            "network_width1": hyperparameters["network_width1"],
+            "network_width2": hyperparameters["network_width2"],
+            "network_width3": hyperparameters["network_width3"],
+        },
+        "training": {
+            "num_epochs": hyperparameters["num_epochs"],
+            "batch_size": hyperparameters["batch_size"],
+            "learning_rate": hyperparameters["learning_rate"],
+            "scheduler": hyperparameters["scheduler"],
+            "augmentation": hyperparameters["augmentation"],
+        },
+    }
+
+    with open(f"modeldata/{runname}_manifest.yaml", "w") as f:
+        yaml.dump(manifest, f, sort_keys=False)
+
+    print(f"Saved: modeldata/{runname}_manifest.yaml")
