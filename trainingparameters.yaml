@@ -18,7 +18,7 @@ network_width3: 0
 
 num_epochs: 100
 batch_size: 16
-learning_rate: 0.0005
+learning_rate: 0.0007
 
 scheduler: Cosine
 step_size: 20
@@ -27,8 +27,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 10
-rotation2: 10
+rotation1: 12
+rotation2: 12
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
@@ -37,7 +37,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 75
+maxw_update_until_epoch: 60
 maxw_quantscale: 0.25
 
 mean: 0.4333
@@ -49,5 +49,5 @@ kfold: true
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
-seed: 420
+seed: 67
 deterministic: true
