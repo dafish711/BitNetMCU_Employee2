@@ -641,7 +641,11 @@ def train_model(model, device, hyperparameters, train_data, test_data):
         testaccuracy = correct / total * 100
         mean_test_loss = np.mean(test_losses)
 
-        if mean_test_loss < best_test_loss:
+        min_delta = hyperparameters.get("best_loss_min_delta", 0.01)
+
+        if (best_state is None) or (mean_test_loss < best_test_loss - min_delta) or (
+            abs(mean_test_loss - best_test_loss) <= min_delta and testaccuracy > best_test_acc
+        ):
             best_test_acc = testaccuracy
             best_test_loss = mean_test_loss
             best_state = model.state_dict()
