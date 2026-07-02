@@ -619,6 +619,7 @@ if __name__ == "__main__":
 
             fold_params = dict(hyperparameters)
             fold_params["runtag"] = f'{hyperparameters["runtag"]}_fold{fold_index + 1}'
+            fold_params["seed"] = hyperparameters.get("seed", ) + fold_index
 
             train_data, test_data, num_classes, class_to_idx = build_imagefolder_kfold_datasets(
                 fold_params,
