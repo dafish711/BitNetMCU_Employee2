@@ -57,7 +57,7 @@ std: 0.1472
 
 best_loss_min_delta: 0.01
 
-kfold: true
+kfold: False
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
