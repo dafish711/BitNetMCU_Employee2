@@ -287,7 +287,11 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     all_test_images = entire_dataset[0].to(device)
     all_test_labels = entire_dataset[1].to(device)
 
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = optim.Adam(
+        model.parameters(), 
+        lr=learning_rate,
+        weight_decay=hyperparameters.get("weight decay", 0.0)
+    )
 
     if hyperparameters["scheduler"] == "StepLR":
         scheduler = StepLR(
@@ -307,7 +311,9 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     else:
         raise ValueError("Invalid scheduler")
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(
+        label_smoothing=hyperparameters.get("label smoothing", 0.0)
+    )
 
     os.makedirs("runs", exist_ok=True)
     os.makedirs("modeldata", exist_ok=True)

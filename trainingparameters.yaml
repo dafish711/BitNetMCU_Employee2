@@ -61,6 +61,9 @@ kfold: true
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
+label smoothing: 0.005
+weight decay: 0.0001
+
 seed: 670
 deterministic: true
 
