@@ -57,17 +57,17 @@ validation_folder: '/content/drive/MyDrive/Custom_Dataset/validation_set'
 test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
 num_classes: 10
 
-model: FCMNIST
+model: CNNMNIST
 runtag: face10
 
-QuantType: 8bit
+QuantType: 4bitsym
 NormType: RMS
 WScale: PerTensor
 
-network_width1: 128
-network_width2: 96
-network_width3: 64
-#cnn_width: 64
+network_width1: 96
+network_width2: 64
+network_width3: 0
+cnn_width: 64
 
 num_epochs: 80
 batch_size: 16
