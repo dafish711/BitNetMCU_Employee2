@@ -69,9 +69,9 @@ network_width2: 64
 network_width3: 0
 #cnn_width: 64
 
-num_epochs: 100
+num_epochs: 120
 batch_size: 16
-learning_rate: 0.0005
+learning_rate: 0.0001
 
 scheduler: Cosine
 step_size: 20
@@ -90,8 +90,10 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 70
+maxw_update_until_epoch:85
 maxw_quantscale: 0.25
 
 mean: 0.4333
 std: 0.1472
+
+pretrained_model: modeldata/octav_FC_Olivetti_Aug_BitMnist_4bitsym_width96_64_0_epochs80.pth

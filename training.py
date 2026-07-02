@@ -901,6 +901,31 @@ if __name__ == "__main__":
 
     model = load_model(hyperparameters["model"], hyperparameters)
     model = model.to(device)
+    
+    # Load pretrained weights if specified
+    pretrained_path = hyperparameters.get("pretrained_model", "")
+
+    if pretrained_path:
+        print(f"Loading pretrained weights: {pretrained_path}")
+
+        pretrained_state = torch.load(pretrained_path, map_location=device)
+        model_state = model.state_dict()
+
+        filtered_state = {
+            k: v for k, v in pretrained_state.items()
+            if k in model_state and v.shape == model_state[k].shape
+        }
+
+        skipped_state = [
+            k for k, v in pretrained_state.items()
+            if k not in model_state or v.shape != model_state[k].shape
+        ]
+
+        model_state.update(filtered_state)
+        model.load_state_dict(model_state)
+
+        print(f"Loaded pretrained tensors: {len(filtered_state)}")
+        print(f"Skipped tensors: {skipped_state}")
 
     summary(model, input_size=(1, 16, 16))
 
