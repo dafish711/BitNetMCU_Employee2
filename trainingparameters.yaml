@@ -27,18 +27,18 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 15
-rotation2: 15
+rotation1: 10
+rotation2: 10
 elastictransformprobability: 0.0
 
 horizontal_flip: true
-horizontal_flip_prob: 0.5
+horizontal_flip_prob: 0.3
 
 color_jitter: true
-brightness: 0.2
-contrast: 0.2
+brightness: 0.1
+contrast: 0.1
 
-random_erasing: true
+random_erasing: false
 random_erasing_prob: 0.1
 random_erasing_scale_min: 0.02
 random_erasing_scale_max: 0.08
