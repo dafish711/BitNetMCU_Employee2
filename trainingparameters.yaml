@@ -60,7 +60,7 @@ num_classes: 10
 model: FCMNIST
 runtag: face10
 
-QuantType: 4bitsym
+QuantType: 8bit
 NormType: RMS
 WScale: PerTensor
 
@@ -70,8 +70,8 @@ network_width3: 0
 #cnn_width: 64
 
 num_epochs: 180
-batch_size: 16
-learning_rate: 0.0005
+batch_size: 8
+learning_rate: 0.0003
 
 scheduler: Cosine
 step_size: 20
@@ -80,8 +80,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 5
-rotation2: 5
+rotation1: 10
+rotation2: 10
 elastictransformprobability: 0.0
 
 lambda_l1: 0.0005
