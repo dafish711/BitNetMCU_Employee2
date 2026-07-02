@@ -13,7 +13,7 @@ WScale: PerTensor
 
 network_width1: 64
 network_width2: 64
-network_width3: 0
+network_width3: 32
 #cnn_width: 64
 
 num_epochs: 100
@@ -38,7 +38,7 @@ color_jitter: true
 brightness: 0.1
 contrast: 0.1
 
-random_erasing: false
+random_erasing: true
 random_erasing_prob: 0.1
 random_erasing_scale_min: 0.02
 random_erasing_scale_max: 0.08
@@ -57,7 +57,7 @@ std: 0.1472
 
 best_loss_min_delta: 0.01
 
-kfold: False
+kfold: true
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
