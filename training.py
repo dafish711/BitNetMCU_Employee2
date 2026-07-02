@@ -641,13 +641,11 @@ def train_model(model, device, hyperparameters, train_data, test_data):
         testaccuracy = correct / total * 100
         mean_test_loss = np.mean(test_losses)
 
-        if (testaccuracy > best_test_acc) or (
-            testaccuracy == best_test_acc and mean_test_loss < best_test_loss
-        ):
+        if mean_test_loss < best_test_loss:
             best_test_acc = testaccuracy
             best_test_loss = mean_test_loss
             best_state = model.state_dict()
-            best_epoch_line =(
+            best_epoch_line = (
                 f"Epoch [{epoch + 1}/{num_epochs}], "
                 f"LTrain:{np.mean(train_losses):.6f} "
                 f"ATrain:{trainaccuracy:.2f}% "
@@ -717,7 +715,7 @@ def train_model(model, device, hyperparameters, train_data, test_data):
 
     numofweights = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-    print(f"Best Test Accuracy: {best_test_acc:.2f}%")
+    print(f"Best Validation Accuracy: {best_test_acc:.2f}%")
     print(f"Best Epoch: {best_epoch_line}")
     print(f"TotalBits: {totalbits} TotalBytes: {totalbits / 8.0}")
 
