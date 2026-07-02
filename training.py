@@ -554,7 +554,7 @@ def build_imagefolder_dataset(hyperparameters):
         )
 
     if hyperparameters["augmentation"]:
-        augmented_transform = transforms.Compose([
+        aug_list = [
             transforms.Grayscale(num_output_channels=1),
             transforms.RandomRotation(degrees=hyperparameters["rotation1"]),
             transforms.RandomAffine(
@@ -562,6 +562,24 @@ def build_imagefolder_dataset(hyperparameters):
                 translate=(0.1, 0.1),
                 scale=(0.9, 1.1),
             ),
+        ]
+
+        if hyperparameters.get("horizontal_flip", False):
+            aug_list.append(
+                transforms.RandomHorizontalFlip(
+                    p=hyperparameters.get("horizontal_flip_prob", 0.5)
+                )
+            )
+
+        if hyperparameters.get("color_jitter", False):
+            aug_list.append(
+                transforms.ColorJitter(
+                    brightness=hyperparameters.get("brightness", 0.2),
+                    contrast=hyperparameters.get("contrast", 0.2),
+                )
+            )
+
+        aug_list.extend([
             transforms.RandomApply([
                 transforms.ElasticTransform(alpha=40.0, sigma=4.0)
             ], p=hyperparameters["elastictransformprobability"]),
@@ -569,6 +587,18 @@ def build_imagefolder_dataset(hyperparameters):
             transforms.ToTensor(),
             transforms.Normalize(mean, std),
         ])
+
+        if hyperparameters.get("random_erasing", False):
+            aug_list.append(
+                transforms.RandomErasing(
+                    p=hyperparameters.get("random_erasing_prob", 0.1),
+                    scale=tuple(hyperparameters.get("random_erasing_scale", [0.02, 0.08])),
+                    ratio=(0.3, 3.3),
+                    value=0,
+                )
+            )
+
+        augmented_transform = transforms.Compose(aug_list)
 
         augmented_train_data = datasets.ImageFolder(root=train_dir, transform=augmented_transform)
         train_data = ConcatDataset([train_data, augmented_train_data])

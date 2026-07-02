@@ -27,9 +27,20 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 12
-rotation2: 12
+rotation1: 15
+rotation2: 15
 elastictransformprobability: 0.0
+
+horizontal_flip: true
+horizontal_flip_prob: 0.5
+
+color_jitter: true
+brightness: 0.2
+contrast: 0.2
+
+random_erasing: true
+random_erasing_prob: 0.1
+random_erasing_scale: [0.02, 0.08]
 
 lambda_l1: 0.0005
 prune_epoch: -1
@@ -49,5 +60,7 @@ kfold: true
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
-seed: 67
+seed: 670
 deterministic: true
+
+#Decent seed = 420, 67
