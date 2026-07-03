@@ -12,13 +12,14 @@ NormType: RMS
 WScale: PerTensor
 
 network_width1: 96
-network_width2: 96
-network_width3: 32
+network_width2: 64
+network_width3: 0
 #cnn_width: 64
 
-num_epochs: 100
-batch_size: 16
+num_epochs: 200
+batch_size: 8
 learning_rate: 0.0005
+# can try lower
 
 scheduler: Cosine
 step_size: 20
@@ -31,10 +32,10 @@ rotation1: 10
 rotation2: 10
 elastictransformprobability: 0.0
 
-horizontal_flip: true
+horizontal_flip: false
 horizontal_flip_prob: 0.2
 
-color_jitter: true
+color_jitter: false
 brightness: 0.1
 contrast: 0.1
 
@@ -49,11 +50,11 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 75
+maxw_update_until_epoch: 150
 maxw_quantscale: 0.25
 
-mean: 0.4286
-std: 0.1461
+mean: 0.4238
+std: 0.1439
 
 best_loss_min_delta: 0.01
 
