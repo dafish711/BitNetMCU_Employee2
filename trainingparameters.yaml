@@ -53,8 +53,8 @@ maxw_algo: octav
 maxw_update_until_epoch: 150
 maxw_quantscale: 0.25
 
-mean: 0.4238
-std: 0.1439
+mean: 0.45
+std: 0.15
 
 best_loss_min_delta: 0.01
 
