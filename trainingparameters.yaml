@@ -11,8 +11,8 @@ QuantType: 4bitsym
 NormType: RMS
 WScale: PerTensor
 
-network_width1: 64
-network_width2: 64
+network_width1: 96
+network_width2: 96
 network_width3: 32
 #cnn_width: 64
 
@@ -27,8 +27,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 8
-rotation2: 8
+rotation1: 10
+rotation2: 10
 elastictransformprobability: 0.0
 
 horizontal_flip: true
