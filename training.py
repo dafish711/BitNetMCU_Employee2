@@ -609,8 +609,13 @@ def build_imagefolder_dataset(hyperparameters):
 
         augmented_transform = transforms.Compose(aug_list)
 
-        augmented_train_data = datasets.ImageFolder(root=train_dir, transform=augmented_transform)
-        train_data = ConcatDataset([train_data, augmented_train_data])
+        augmented_train_data1 = datasets.ImageFolder(root=train_dir, transform=augmented_transform)
+        augmented_train_data_2 = datasets.ImageFolder(root=train_dir, transform=augmented_transform)
+        train_data = ConcatDataset([
+            train_data, 
+            augmented_train_data1,
+            augmented_train_data_2
+        ])
 
     class_to_idx = datasets.ImageFolder(root=train_dir).class_to_idx
     num_classes = len(class_to_idx)
