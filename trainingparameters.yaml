@@ -4,7 +4,7 @@ validation_folder: '/content/drive/MyDrive/Custom_Dataset/validation_set'
 test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
 num_classes: 10
 
-model: FCMNIST
+model: CNNMNIST
 runtag: face10
 
 QuantType: 4bitsym
@@ -14,14 +14,14 @@ WScale: PerTensor
 network_width1: 96
 network_width2: 64
 network_width3: 0
-#cnn_width: 64
+cnn_width: 64
 
 num_epochs: 200
 batch_size: 8
 learning_rate: 0.0005
 # can try lower
 
-scheduler: Cosine
+scheduler: CosineWarmRestarts
 step_size: 20
 lr_decay: 0.5
 T_0: 10
@@ -56,14 +56,14 @@ maxw_quantscale: 0.25
 mean: 0.45
 std: 0.15
 
-best_loss_min_delta: 0.01
+best_loss_min_delta: 0.001
 
 kfold: False
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
-label_smoothing: 0.02
-weight_decay: 0.0001
+label_smoothing: 0.01
+weight_decay: 0.00005
 
 seed: 670
 deterministic: true
