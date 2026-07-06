@@ -977,8 +977,8 @@ if __name__ == '__main__':
         if not os.path.isdir(test_folder):
             raise FileNotFoundError(f"Testing folder not found: {test_folder}")
 
-        mean = hyperparameters.get("mean", [0.4238])
-        std = hyperparameters.get("std", [0.1439])
+        mean = hyperparameters.get("mean", [0.4231])
+        std = hyperparameters.get("std", [0.1437])
         
         # ensure tuple of floats
         if isinstance(mean, (float, int)):
@@ -1011,7 +1011,7 @@ if __name__ == '__main__':
 
     elif dataset_name == "MNIST":
         num_classes = 10
-        mean, std = (0.4238,), (0.1439,)
+        mean, std = (0.4231,), (0.1437,)
 
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
