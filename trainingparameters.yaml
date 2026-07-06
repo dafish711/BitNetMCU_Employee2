@@ -28,8 +28,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 10
-rotation2: 10
+rotation1: 12
+rotation2: 12
 elastictransformprobability: 0.0
 
 horizontal_flip: false
@@ -50,11 +50,11 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 75
+maxw_update_until_epoch: 70
 maxw_quantscale: 0.25
 
-mean: 0.43
-std: 0.12
+mean: 0.40
+std: 0.15
 
 best_loss_min_delta: 0.005
 
