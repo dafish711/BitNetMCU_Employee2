@@ -16,9 +16,9 @@ network_width2: 64
 network_width3: 0
 #cnn_width: 64
 
-num_epochs: 200
+num_epochs: 100
 batch_size: 8
-learning_rate: 0.0003
+learning_rate: 0.0005
 # can try lower
 
 scheduler: Cosine
@@ -50,11 +50,11 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 150
+maxw_update_until_epoch: 75
 maxw_quantscale: 0.25
 
-mean: 0.45
-std: 0.15
+mean: 0.43
+std: 0.12
 
 best_loss_min_delta: 0.001
 
