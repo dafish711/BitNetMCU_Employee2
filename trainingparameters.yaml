@@ -16,8 +16,8 @@ network_width2: 64
 network_width3: 0
 #cnn_width: 64
 
-num_epochs: 150
-batch_size: 16
+num_epochs: 100
+batch_size: 8
 learning_rate: 0.0005
 # can try lower
 
@@ -50,7 +50,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 120
+maxw_update_until_epoch: 70
 maxw_quantscale: 0.25
 
 mean: 0.4231
@@ -63,7 +63,7 @@ k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Training_set_transformed"
 
 label_smoothing: 0.01
-weight_decay: 0.00005
+weight_decay: 0.0001
 
 seed: 670
 deterministic: true
