@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Subset
 from sklearn.model_selection import StratifiedKFold
 import sys
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
 # Seed helper function
@@ -148,6 +149,36 @@ def plot_training_curves(history, runname, out_dir="modeldata"):
     print(f"Saved training curves: {out_path}")
     return out_path
 
+
+def plot_confusion_matrix(y_true, y_pred, class_names, runname, out_dir="modeldata"):
+    os.makedirs(out_dir, exist_ok=True)
+
+    cm = confusion_matrix(y_true, y_pred)
+
+    fig, ax = plt.subplots(figsize=(8, 8))
+    disp = ConfusionMatrixDisplay(
+        confusion_matrix=cm,
+        display_labels=class_names,
+    )
+    disp.plot(
+        ax=ax,
+        cmap="Blues",
+        xticks_rotation=45,
+        colorbar=True,
+        values_format="d",
+    )
+
+    ax.set_title("Validation Confusion Matrix")
+    fig.tight_layout()
+
+    out_path = os.path.join(out_dir, f"{runname}_confusion_matrix.png")
+    fig.savefig(out_path, dpi=150)
+    plt.close(fig)
+
+    print(f"Saved confusion matrix: {out_path}")
+    return out_path
+
+
 # ----------------------------------------------
 # BitNetMCU training
 # ----------------------------------------------
@@ -235,7 +266,7 @@ def log_positive_activations(model, writer, epoch, all_test_images, batch_size):
     return fraction_positive
 
 
-def train_model(model, device, hyperparameters, train_data, test_data):
+def train_model(model, device, hyperparameters, train_data, test_data, class_names=None):
     num_epochs = hyperparameters["num_epochs"]
     learning_rate = hyperparameters["learning_rate"]
     halve_lr_epoch = hyperparameters.get("halve_lr_epoch", -1)
@@ -327,6 +358,12 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     best_epoch_line = None
     totalbits = 0
     
+    best_train_acc = 0.0
+    best_train_loss = float("inf")
+    
+    best_y_true = None
+    best_y_pred = None
+    
     history ={
         "train_loss": [],
         "test_loss": [],
@@ -400,6 +437,8 @@ def train_model(model, device, hyperparameters, train_data, test_data):
         correct = 0
         total = 0
         test_losses = []
+        epoch_y_true = []
+        epoch_y_pred = []
 
         with torch.no_grad():
             for i in range(0, len(all_test_images), batch_size):
@@ -408,6 +447,9 @@ def train_model(model, device, hyperparameters, train_data, test_data):
 
                 outputs = model(images)
                 _, predicted = torch.max(outputs.data, 1)
+                
+                epoch_y_true.extend(labels.cpu().numpy())
+                epoch_y_pred.extend(predicted.cpu().numpy())
 
                 loss = criterion(outputs, labels)
                 test_losses.append(loss.item())
@@ -418,6 +460,7 @@ def train_model(model, device, hyperparameters, train_data, test_data):
         testaccuracy = correct / total * 100
         mean_test_loss = np.mean(test_losses)
 
+        '''
         min_delta = hyperparameters.get("best_loss_min_delta", 0.01)
 
         if (best_state is None) or (mean_test_loss < best_test_loss - min_delta) or (
@@ -426,6 +469,10 @@ def train_model(model, device, hyperparameters, train_data, test_data):
             best_test_acc = testaccuracy
             best_test_loss = mean_test_loss
             best_state = model.state_dict()
+            
+            best_y_true = list(epoch_y_true)
+            best_y_pred = list(epoch_y_pred)
+            
             best_epoch_line = (
                 f"Epoch [{epoch + 1}/{num_epochs}], "
                 f"LTrain:{np.mean(train_losses):.6f} "
@@ -433,7 +480,30 @@ def train_model(model, device, hyperparameters, train_data, test_data):
                 f"LTest:{np.mean(test_losses):.6f} "
                 f"ATest:{testaccuracy:.2f}% "
             )
+        '''
+        mean_train_loss = np.mean(train_losses)
 
+        if (best_state is None) or (trainaccuracy > best_train_acc) or (
+            trainaccuracy == best_train_acc and mean_train_loss < best_train_loss
+        ):
+            best_train_acc = trainaccuracy
+            best_train_loss = mean_train_loss
+            best_test_acc = testaccuracy
+            best_test_loss = mean_test_loss
+
+            best_state = model.state_dict()
+
+            best_y_true = list(epoch_y_true)
+            best_y_pred = list(epoch_y_pred)
+
+            best_epoch_line = (
+                f"Epoch [{epoch + 1}/{num_epochs}], "
+                f"LTrain:{mean_train_loss:.6f} "
+                f"ATrain:{trainaccuracy:.2f}% "
+                f"LTest:{np.mean(test_losses):.6f} "
+                f"ATest:{testaccuracy:.2f}% "
+            )
+        
         activity = log_positive_activations(model, writer, epoch, all_test_images, batch_size)
 
         end_time = time.time()
@@ -514,6 +584,12 @@ def train_model(model, device, hyperparameters, train_data, test_data):
     )
     
     plot_training_curves(history, runname)
+    
+    if best_y_true is not None and best_y_pred is not None:
+        if class_names is None:
+            class_names = [str(i) for i in range(hyperparameters["num_classes"])]
+
+        plot_confusion_matrix(best_y_true, best_y_pred, class_names, runname)
 
     writer.close()
 
@@ -672,6 +748,10 @@ if __name__ == "__main__":
             runname = create_run_name(fold_params)
 
             model = load_model(fold_params["model"], fold_params).to(device)
+            
+            class_names = [
+                name for name, idx in sorted(class_to_idx.items(), key=lambda item: item[1])
+            ]
 
             print("training...")
             best_state = train_model(model, device, fold_params, train_data, test_data)
@@ -756,9 +836,13 @@ if __name__ == "__main__":
     model = model.to(device)
 
     summary(model, input_size=(1, 16, 16))
+    
+    class_names = [
+        name for name, idx in sorted(class_to_idx.items(), key=lambda item: item[1])
+    ]
 
     print("training...")
-    best_state = train_model(model, device, hyperparameters, train_data, test_data)
+    best_state = train_model(model, device, hyperparameters, train_data, test_data, class_names=class_names)
 
     print("saving model...")
 
