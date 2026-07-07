@@ -4,7 +4,7 @@ validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
 test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
 num_classes: 10
 
-model: FCMNIST
+model: CNNMNIST
 runtag: face10
 
 QuantType: 4bitsym
