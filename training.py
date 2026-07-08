@@ -176,7 +176,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names, runname, out_dir="modelda
     out_path = os.path.join(out_dir, f"{runname}_confusion_matrix.png")
     fig.savefig(out_path, dpi=150)
     
-    from Ipython.display import display
+    from IPython.display import display
     display(fig)
     
     plt.close(fig)
