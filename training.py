@@ -507,13 +507,13 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
 
         mean_train_loss = np.mean(train_losses)
 
-#        if (best_state is None) or (trainaccuracy > best_train_acc) or (
-#            trainaccuracy == best_train_acc and mean_train_loss < best_train_loss
-#        ):
-            
-        if (best_state is None) or (testaccuracy > best_test_acc) or (
-            testaccuracy == best_test_acc and mean_test_loss < best_test_loss
+        if (best_state is None) or (trainaccuracy > best_train_acc) or (
+            trainaccuracy == best_train_acc and mean_train_loss < best_train_loss
         ):
+            
+#        if (best_state is None) or (testaccuracy > best_test_acc) or (
+#            testaccuracy == best_test_acc and mean_test_loss < best_test_loss
+#        ):
         
             best_train_acc = trainaccuracy
             best_train_loss = mean_train_loss
