@@ -60,7 +60,7 @@ best_loss_min_delta: 0.005
 
 kfold: True
 k_folds: 5
-kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Pre-processed_items/Training_set_transformed"
+kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Pre-processed_Items/Training_set_transformed"
 
 label_smoothing: 0.01
 weight_decay: 0.0002
