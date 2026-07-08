@@ -24,6 +24,8 @@ from torch.utils.data import Subset
 from sklearn.model_selection import StratifiedKFold
 import sys
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
 
 
 # Seed helper function
@@ -173,11 +175,45 @@ def plot_confusion_matrix(y_true, y_pred, class_names, runname, out_dir="modelda
 
     out_path = os.path.join(out_dir, f"{runname}_confusion_matrix.png")
     fig.savefig(out_path, dpi=150)
+    
+    from Ipython.display import display
+    display(fig)
+    
     plt.close(fig)
 
     print(f"Saved confusion matrix: {out_path}")
     return out_path
 
+
+# Plot ROC curve for multi-class classification
+def plot_roc_curve(y_true, y_score, class_names, runname, out_dir="modeldata"):
+    os.makedirs(out_dir, exist_ok=True)
+
+    num_classes = len(class_names)
+    y_true_bin = label_binarize(y_true, classes=list(range(num_classes)))
+
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    for i, class_name in enumerate(class_names):
+        fpr, tpr, _ = roc_curve(y_true_bin[:, i], y_score[:, i])
+        roc_auc = auc(fpr, tpr)
+        ax.plot(fpr, tpr, label=f"{class_name} AUC={roc_auc:.2f}")
+
+    ax.plot([0, 1], [0, 1], "k--", label="Random")
+    ax.set_xlabel("False Positive Rate")
+    ax.set_ylabel("True Positive Rate")
+    ax.set_title("Validation ROC Curve")
+    ax.legend(fontsize=8)
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+
+    out_path = os.path.join(out_dir, f"{runname}_roc_curve.png")
+    fig.savefig(out_path, dpi=150)
+    plt.close(fig)
+
+    print(f"Saved ROC curve: {out_path}")
+    return out_path
 
 # ----------------------------------------------
 # BitNetMCU training
@@ -363,7 +399,8 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
     
     best_y_true = None
     best_y_pred = None
-    
+    best_y_score = None # For ROC curve
+
     history ={
         "train_loss": [],
         "test_loss": [],
@@ -439,17 +476,22 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
         test_losses = []
         epoch_y_true = []
         epoch_y_pred = []
+        epoch_y_score = []
 
         with torch.no_grad():
             for i in range(0, len(all_test_images), batch_size):
-                images = all_test_images[i:i + batch_size]
+                images = all_test_images[i:i + batch_size] 
                 labels = all_test_labels[i:i + batch_size]
 
                 outputs = model(images)
                 _, predicted = torch.max(outputs.data, 1)
+                probs = torch.softmax(outputs, dim=1)
+
                 
                 epoch_y_true.extend(labels.cpu().numpy())
                 epoch_y_pred.extend(predicted.cpu().numpy())
+                    
+                epoch_y_score.extend(probs.cpu().numpy())
 
                 loss = criterion(outputs, labels)
                 test_losses.append(loss.item())
@@ -495,6 +537,8 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
 
             best_y_true = list(epoch_y_true)
             best_y_pred = list(epoch_y_pred)
+            
+            best_y_score = np.array(epoch_y_score)  # Store the best epoch's scores for ROC curve
 
             best_epoch_line = (
                 f"Epoch [{epoch + 1}/{num_epochs}], "
@@ -590,6 +634,7 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
             class_names = [str(i) for i in range(hyperparameters["num_classes"])]
 
         plot_confusion_matrix(best_y_true, best_y_pred, class_names, runname)
+        plot_roc_curve(best_y_true, best_y_score, class_names, runname)
 
     writer.close()
 
