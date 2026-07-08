@@ -211,6 +211,9 @@ def plot_roc_curve(y_true, y_score, class_names, runname, out_dir="modeldata"):
     out_path = os.path.join(out_dir, f"{runname}_roc_curve.png")
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
+    
+    from IPython.display import display
+    display(fig)
 
     print(f"Saved ROC curve: {out_path}")
     return out_path
