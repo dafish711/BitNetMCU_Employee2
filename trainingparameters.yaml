@@ -7,7 +7,7 @@ num_classes: 10
 model: CNNMNIST
 runtag: face10
 
-QuantType: 4bitsym
+QuantType: 2bitsym
 NormType: RMS
 WScale: PerTensor
 
@@ -58,7 +58,7 @@ std: 0.1437
 
 best_loss_min_delta: 0.005
 
-kfold: True
+kfold: False
 k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Pre-processed_Items/Training_set_transformed"
 
