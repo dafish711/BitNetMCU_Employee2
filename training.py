@@ -64,7 +64,7 @@ def build_imagefolder_kfold_datasets(hyperparameters, fold_index):
         transforms.Grayscale(num_output_channels=1),
         transforms.Resize((16, 16)),
         transforms.ToTensor(),
-        transforms.Normalize(mean, std),
+        # transforms.Normalize(mean, std),
     ])
 
     aug_transform = transforms.Compose([
@@ -80,7 +80,7 @@ def build_imagefolder_kfold_datasets(hyperparameters, fold_index):
         ], p=hyperparameters["elastictransformprobability"]),
         transforms.Resize((16, 16)),
         transforms.ToTensor(),
-        transforms.Normalize(mean, std),
+        # transforms.Normalize(mean, std),
     ])
 
     base_dataset = datasets.ImageFolder(root=root_dir, transform=base_transform)
@@ -624,7 +624,7 @@ def build_imagefolder_dataset(hyperparameters):
         transforms.Grayscale(num_output_channels=1),
         transforms.Resize((16, 16)),
         transforms.ToTensor(),
-        transforms.Normalize(mean, std),
+        # transforms.Normalize(mean, std),
     ])
 
     train_data = datasets.ImageFolder(root=train_dir, transform=transform)
@@ -667,7 +667,7 @@ def build_imagefolder_dataset(hyperparameters):
             ], p=hyperparameters["elastictransformprobability"]),
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std),
+            # transforms.Normalize(mean, std),
         ])
 
         if hyperparameters.get("random_erasing", False):
@@ -774,7 +774,7 @@ if __name__ == "__main__":
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std),
+            # transforms.Normalize(mean, std),
         ])
 
         train_data = datasets.MNIST(root="data", train=True, transform=transform, download=True)
@@ -812,7 +812,7 @@ if __name__ == "__main__":
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std),
+            # transforms.Normalize(mean, std),
         ])
 
         train_data = EMNIST(root="data", split=split, train=True, transform=transform, download=True)

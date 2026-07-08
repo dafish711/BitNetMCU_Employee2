@@ -84,7 +84,7 @@
 #     transform = transforms.Compose([
 #         transforms.Resize((16, 16)),  # Resize images to 16x16
 #         transforms.ToTensor(),
-#         transforms.Normalize((0.1307,), (0.3081,))
+#         # transforms.Normalize((0.1307,), (0.3081,))
 #     ])
 
 #     #train_data = datasets.MNIST(root='data', train=True, transform=transform, download=True)
@@ -290,7 +290,7 @@ def get_transform(hyperparameters):
         transforms.Grayscale(num_output_channels=1),  # Ensure single channel for MNIST/EMNIST
         transforms.Resize((16, 16)),  # adjust if needed
         transforms.ToTensor(),
-        transforms.Normalize(mean, std)
+        # transforms.Normalize(mean, std)
     ])
 
 
@@ -320,7 +320,7 @@ def build_test_dataset(hyperparameters):
             transforms.Grayscale(num_output_channels=1),
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize((0.4231,), (0.1437,)),
+            # transforms.Normalize((0.4231,), (0.1437,)),
         ])
 
         test_data = datasets.MNIST(root="data", train=False, transform=transform, download=True)
@@ -331,7 +331,7 @@ def build_test_dataset(hyperparameters):
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,)),
+            # transforms.Normalize((0.1307,), (0.3081,)),
         ])
 
         test_data = datasets.EMNIST(
@@ -349,7 +349,7 @@ def build_test_dataset(hyperparameters):
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,)),
+            # transforms.Normalize((0.1307,), (0.3081,)),
         ])
 
         test_data = datasets.EMNIST(
