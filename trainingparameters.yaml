@@ -1,5 +1,5 @@
 dataset: IMAGEFOLDER
-train_folder: '/content/drive/MyDrive/Custom_Dataset/train_set'
+train_folder: '/content/drive/MyDrive/Custom_Dataset/training_set'
 validation_folder: '/content/drive/MyDrive/Custom_Dataset/validation_set'
 test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
 num_classes: 10
