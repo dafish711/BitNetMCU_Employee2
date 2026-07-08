@@ -505,32 +505,16 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
         testaccuracy = correct / total * 100
         mean_test_loss = np.mean(test_losses)
 
-        '''
-        min_delta = hyperparameters.get("best_loss_min_delta", 0.01)
-
-        if (best_state is None) or (mean_test_loss < best_test_loss - min_delta) or (
-            abs(mean_test_loss - best_test_loss) <= min_delta and testaccuracy > best_test_acc
-        ):
-            best_test_acc = testaccuracy
-            best_test_loss = mean_test_loss
-            best_state = model.state_dict()
-            
-            best_y_true = list(epoch_y_true)
-            best_y_pred = list(epoch_y_pred)
-            
-            best_epoch_line = (
-                f"Epoch [{epoch + 1}/{num_epochs}], "
-                f"LTrain:{np.mean(train_losses):.6f} "
-                f"ATrain:{trainaccuracy:.2f}% "
-                f"LTest:{np.mean(test_losses):.6f} "
-                f"ATest:{testaccuracy:.2f}% "
-            )
-        '''
         mean_train_loss = np.mean(train_losses)
 
-        if (best_state is None) or (trainaccuracy > best_train_acc) or (
-            trainaccuracy == best_train_acc and mean_train_loss < best_train_loss
+#        if (best_state is None) or (trainaccuracy > best_train_acc) or (
+#            trainaccuracy == best_train_acc and mean_train_loss < best_train_loss
+#        ):
+            
+        if (best_state is None) or (testaccuracy > best_test_acc) or (
+            testaccuracy == best_test_acc and mean_test_loss < best_test_loss
         ):
+        
             best_train_acc = trainaccuracy
             best_train_loss = mean_train_loss
             best_test_acc = testaccuracy
@@ -615,7 +599,7 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
 
     print(f"Best Epoch: {best_epoch_line}")
     print(f"TotalBits: {totalbits} TotalBytes: {totalbits / 8.0}")
-    print(f"Validation Accuracy at best Loss: {best_test_acc:.2f}%")
+    print(f"Best Validation Accuracy: {best_test_acc:.2f}%")
 
 
     writer.add_hparams(
