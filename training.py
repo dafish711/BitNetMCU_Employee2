@@ -560,8 +560,8 @@ def train_model(model, device, hyperparameters, train_data, test_data, class_nam
             f"Epoch [{epoch + 1}/{num_epochs}], "
             f"LTrain:{np.mean(train_losses):.6f} "
             f"ATrain:{trainaccuracy:.2f}% "
-            # f"LTest:{np.mean(test_losses):.6f} "
-            # f"ATest:{testaccuracy:.2f}% "
+            f"LTest:{np.mean(test_losses):.6f} "
+            f"ATest:{testaccuracy:.2f}% "
             f"Time[s]:{epoch_time:.2f} "
             f"Act:{activity * 100:.1f}% "
             f"w_clip/entropy[bits]: ",
