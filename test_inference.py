@@ -303,8 +303,8 @@ if __name__ == "__main__":
 
     print(f"Saved predictions: {csv_path}")
 
-    print("\nFirst predictions:")
-    for row in prediction_rows[:20]:
+    print("\nPredictions:")
+    for row in prediction_rows:
         print(
             f"{row['sample_index']:03d} "
             f"True:{row['true_class']} "
