@@ -35,7 +35,7 @@ elastictransformprobability: 0.0
 horizontal_flip: false
 horizontal_flip_prob: 0.2
 
-color_jitter: false
+color_jitter: true
 brightness: 0.1
 contrast: 0.1
 
