@@ -1,7 +1,7 @@
 dataset: IMAGEFOLDER
 train_folder: '/content/drive/MyDrive/Custom_Dataset/trainval_set'
-validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
-test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set'
+validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Original_testing_set'
+test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_testing_set'
 num_classes: 10
 
 model: CNNMNIST
