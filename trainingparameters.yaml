@@ -7,7 +7,7 @@ num_classes: 10
 model: FCMNIST
 runtag: face10
 
-QuantType: 2bitsym
+QuantType: 4bitsym
 NormType: RMS
 WScale: PerTensor
 
