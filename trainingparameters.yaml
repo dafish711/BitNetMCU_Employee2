@@ -5,7 +5,7 @@ test_folder: '/content/drive/MyDrive/Olivetti_Dataset/olivetti_FINAL_TEST_SET_LO
 num_classes: 40
 
 model: CNNMNIST
-runtag: face10
+runtag: olivetti40
 
 QuantType: 2bitsym
 NormType: RMS
