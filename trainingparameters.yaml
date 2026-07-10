@@ -1,8 +1,8 @@
 dataset: IMAGEFOLDER
-train_folder: '/content/drive/MyDrive/Custom_Dataset/trainval_set'
-validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Original_testing_set'
-test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_testing_set'
-num_classes: 10
+train_folder: '/content/drive/MyDrive/Olivetti_Dataset/olivetti_model_development_ONLY/training_set'
+validation_folder: '/content/drive/MyDrive/Olivetti_Dataset/olivetti_model_development_ONLY/validation_set'
+test_folder: '/content/drive/MyDrive/Olivetti_Dataset/olivetti_FINAL_TEST_SET_LOCKED_ONLY'
+num_classes: 40
 
 model: CNNMNIST
 runtag: face10
