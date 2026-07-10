@@ -7,7 +7,7 @@ num_classes: 40
 model: FCMNIST
 runtag: olivetti40
 
-QuantType: 2bitsym
+QuantType: 4bitsym
 NormType: RMS
 WScale: PerTensor
 
