@@ -430,7 +430,7 @@ if __name__ == '__main__':
             transforms.Grayscale(num_output_channels=1),
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.normalize(mean, std)
+            transforms.normalize(mean, std)
         ])
 
         test_data = datasets.ImageFolder(root=test_folder, transform=transform)
@@ -451,7 +451,7 @@ if __name__ == '__main__':
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.normalize(mean, std)
+            transforms.normalize(mean, std)
         ])
 
         test_data = datasets.MNIST(
@@ -492,7 +492,7 @@ if __name__ == '__main__':
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.normalize(mean, std)
+            transforms.normalize(mean, std)
         ])
 
         test_data = EMNIST(
