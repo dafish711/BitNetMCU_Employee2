@@ -57,8 +57,8 @@ maxw_algo: octav
 maxw_update_until_epoch: 70
 maxw_quantscale: 0.25
 
-mean: 0.1307
-std: 0.3081
+# mean: 0.1307
+# std: 0.3081
 
 mean: 0.45
 std: 0.12
