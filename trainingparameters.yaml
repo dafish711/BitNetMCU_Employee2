@@ -4,8 +4,8 @@ dataset: IMAGEFOLDER
 #test_folder: '/content/drive/MyDrive/Olivetti_Dataset/olivetti_FINAL_TEST_SET_LOCKED_ONLY'
 
 train_folder: '/content/drive/MyDrive/Custom_Dataset/training_set'
-validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Original_testing_set'
-test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Original_testing_set'
+validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_testing_set'
+test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_testing_set'
 num_classes: 10
 
 model: CNNMNIST
