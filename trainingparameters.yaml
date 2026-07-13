@@ -6,12 +6,12 @@ dataset: IMAGEFOLDER
 train_folder: '/content/drive/MyDrive/Custom_Dataset/training_set'
 validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_testing_set'
 test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_testing_set'
-num_classes: 40
+num_classes: 10
 
 model: CNNMNIST
-runtag: olivetti40
+runtag: face10
 
-QuantType: 4bitsym
+QuantType: 2bitsym
 NormType: RMS
 WScale: PerTensor
 
@@ -21,7 +21,7 @@ network_width3: 0
 cnn_width: 64
 
 num_epochs: 100
-batch_size: 16
+batch_size: 8
 learning_rate: 0.0005
 # can try lower
 
