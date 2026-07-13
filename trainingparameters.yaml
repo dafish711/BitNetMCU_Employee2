@@ -22,7 +22,7 @@ cnn_width: 64
 
 num_epochs: 100
 batch_size: 8
-learning_rate: 0.0003
+learning_rate: 0.0005
 # can try lower
 
 scheduler: Cosine
