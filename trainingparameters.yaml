@@ -8,7 +8,7 @@ validation_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_t
 test_folder: '/content/drive/MyDrive/Custom_Dataset/testing_set/Extended_testing_set'
 num_classes: 10
 
-model: CNNMNIST
+model: FCMNIST
 runtag: face10
 
 QuantType: 4bitsym
@@ -18,7 +18,7 @@ WScale: PerTensor
 network_width1: 96
 network_width2: 64
 network_width3: 0
-cnn_width: 64
+# cnn_width: 64
 
 num_epochs: 100
 batch_size: 8
