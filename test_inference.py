@@ -329,6 +329,7 @@ if __name__ == "__main__":
 
     counter = 0
     correct_py = 0
+    quantized_prediction_rows = []
 
     test_loader2 = DataLoader(test_data, batch_size=1, shuffle=False)
 
@@ -338,6 +339,16 @@ if __name__ == "__main__":
 
         result_py = quantized_model.inference_quantized(input_flat)
         predict_py = np.argmax(result_py, axis=1)
+        
+        true_idx = int(labels_np[0])
+        pred_idx = int(predict_py[0])
+
+        quantized_prediction_rows.append({
+            "sample_index": counter,
+            "true_class": idx_to_class[true_idx],
+            "pred_class": idx_to_class[pred_idx],
+            "correct": true_idx == pred_idx,
+        })
 
         if predict_py[0] == labels_np[0]:
             correct_py += 1
@@ -347,6 +358,15 @@ if __name__ == "__main__":
     print("size of test data:", counter)
     print(f"Mispredictions Python quantized: {counter - correct_py}")
     print("Overall accuracy Python quantized:", correct_py / counter * 100, "%")
+    
+    print("\nQuantized predictions:")
+    for row in quantized_prediction_rows:
+        print(
+            f"{row['sample_index']:03d} "
+            f"True:{row['true_class']} "
+            f"Pred:{row['pred_class']} "
+            f"{'OK' if row['correct'] else 'WRONG'}"
+        )
 
     if args.skip_c:
         print("Skipped C DLL inference check.")
