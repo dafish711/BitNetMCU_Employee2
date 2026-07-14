@@ -60,8 +60,8 @@ maxw_quantscale: 0.25
 # mean: 0.1307
 # std: 0.3081
 
-mean: 0.001
-std: 0.1
+mean: 0.0005
+std: 0.00001
 
 best_loss_min_delta: 0.005
 
