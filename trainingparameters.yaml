@@ -70,7 +70,7 @@ k_folds: 5
 kfold_folder: "/content/drive/MyDrive/Custom_Dataset/Pre-processed_Items/Training_set_transformed"
 
 label_smoothing: 0.01
-weight_decay: 0.0002
+weight_decay: 0.005
 
 seed: 670
 deterministic: true
