@@ -39,7 +39,7 @@ elastictransformprobability: 0.0
 horizontal_flip: false
 horizontal_flip_prob: 0.2
 
-color_jitter: false
+color_jitter: true
 brightness: 0.2
 contrast: 0.2
 
@@ -60,7 +60,7 @@ maxw_quantscale: 0.25
 # mean: 0.1307
 # std: 0.3081
 
-mean: 0.5
+mean: 0.05
 std: 0.001
 
 best_loss_min_delta: 0.005
