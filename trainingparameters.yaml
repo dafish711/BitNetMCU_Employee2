@@ -32,16 +32,16 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 12
-rotation2: 12
+rotation1: 13
+rotation2: 13
 elastictransformprobability: 0.0
 
 horizontal_flip: false
 horizontal_flip_prob: 0.2
 
 color_jitter: true
-brightness: 0.2
-contrast: 0.2
+brightness: 0.3
+contrast: 0.3
 
 random_erasing: false
 random_erasing_prob: 0.1
