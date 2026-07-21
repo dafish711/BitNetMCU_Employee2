@@ -17,7 +17,7 @@ WScale: PerTensor
 
 network_width1: 64
 network_width2: 32
-network_width3: 0
+network_width3: 16
 cnn_width: 64
 
 num_epochs: 100
