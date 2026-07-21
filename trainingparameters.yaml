@@ -32,8 +32,8 @@ T_0: 10
 T_mult: 2
 
 augmentation: true
-rotation1: 13
-rotation2: 13
+rotation1: 12
+rotation2: 12
 elastictransformprobability: 0.0
 
 horizontal_flip: false
