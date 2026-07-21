@@ -11,7 +11,7 @@ num_classes: 10
 model: CNNMNIST
 runtag: face10
 
-QuantType: BinarySym
+QuantType: Binary
 NormType: RMS
 WScale: PerTensor
 
@@ -57,11 +57,11 @@ maxw_algo: octav
 maxw_update_until_epoch: 70
 maxw_quantscale: 0.25
 
-# mean: 0.1307
-# std: 0.3081
+mean: 0.1307
+std: 0.3081
 
-mean: 0.01
-std: 0.0001
+# mean: 0.01
+# std: 0.0001
 
 best_loss_min_delta: 0.005
 
