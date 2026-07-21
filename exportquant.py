@@ -88,7 +88,7 @@ def export_to_hfile(quantized_model, filename, runname, modelname=''):
                 weights = np.array(layer_info['quantized_weights'])
                 quantization_type = layer_info['quantization_type']
 
-                if (bpw * incoming_weights % 32) != 0:
+                if (pack_bpw * incoming_weights % 32) != 0:
                     raise ValueError(f"Size mismatch: Incoming weights must be packed to 32bit boundary. Incoming weights: {incoming_weights} Bit per weight: {bpw} Total bits: {bpw * incoming_weights}")
 
                 print(f'Layer: {layer} Quantization type: <{quantization_type}>, Bits per weight: {bpw}, Num. incoming: {incoming_weights},  Num outgoing: {outgoing_weights}')
@@ -166,12 +166,12 @@ def export_to_hfile(quantized_model, filename, runname, modelname=''):
                     print(f'Skipping layer {layer} with quantization type {quantization_type} and {bpw} bits per weight. Quantization type not supported.')
                     continue
                 
-                pack_bpw = 1 if quantization_type == 'Binary' else bpw
+                pack_bpw = QuantID if quantization_type == "Binary" else bpw
 
                 weight_per_word = 32 // pack_bpw
                 reshaped_array = encoded_weights.reshape(-1, weight_per_word)
 
-                bit_positions = 32 - pack_bpw - np.arange(weight_per_word, dtype=data_type) * bpw
+                bit_positions = 32 - pack_bpw - np.arange(weight_per_word, dtype=data_type) * pack_bpw
                 packed_weights = np.bitwise_or.reduce(reshaped_array << bit_positions, axis=1).view(data_type)
 
                 f.write(f'// Layer: {layer}\n')
