@@ -93,7 +93,7 @@ def export_to_hfile(quantized_model, filename, runname, modelname=''):
                 data_type = np.uint32
 
                 if quantization_type == 'Binary':
-                    encoded_weights = np.where(weights == -1, 0, 1)
+                    encoded_weights = np.where(weights == -1, 0, 1).astype(data_type)
                     QuantID = 1
                 elif quantization_type == '2bitsym':
                     encoded_weights = ((weights < 0).astype(data_type) << 1) | (np.floor(np.abs(weights))).astype(data_type)
@@ -172,7 +172,10 @@ def export_to_hfile(quantized_model, filename, runname, modelname=''):
                 reshaped_array = encoded_weights.reshape(-1, weight_per_word)
 
                 bit_positions = 32 - pack_bpw - np.arange(weight_per_word, dtype=data_type) * pack_bpw
-                packed_weights = np.bitwise_or.reduce(reshaped_array << bit_positions, axis=1).view(data_type)
+                packed_weights = np.bitwise_or.reduce(
+                    reshaped_array << bit_positions, 
+                    axis=1
+                ).astype(data_type)
                 
                 print(
                     f"{layer}: quant={quantization_type}, bpw={bpw}, QuantID={QuantID}, "
