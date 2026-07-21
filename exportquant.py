@@ -167,7 +167,11 @@ def export_to_hfile(quantized_model, filename, runname, modelname=''):
                 
                 if (pack_bpw * incoming_weights % 32) != 0:
                     raise ValueError(f"Size mismatch: Incoming weights must be packed to 32bit boundary. Incoming weights: {incoming_weights} Bit per weight: {bpw} Total bits: {bpw * incoming_weights}")
-
+                print(
+                    f"{layer}: quant={quantization_type}, bpw={bpw}, QuantID={QuantID}, "
+                    f"pack_bpw={pack_bpw}, weights.shape={weights.shape}, "
+                    f"encoded.shape={encoded_weights.shape}, packed_words={packed_weights.size}"
+                )
                 weight_per_word = 32 // pack_bpw
                 reshaped_array = encoded_weights.reshape(-1, weight_per_word)
 
