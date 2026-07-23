@@ -12,9 +12,10 @@ import yaml
 import importlib
 
 CONF_THRESHOLD = 0.50
+TEMPERATURE = 100.0
 
-def numpy_softmax (scores):
-    scores = np.asarray (scores, dtype = np.float32)
+def numpy_softmax (scores, temeprature = 1.0):
+    scores = np.asarray (scores, dtype = np.float32)/temperature 
     exp_scores = np.exp(scores - np.max(scores))
     return exp_scores/exp_scores.sum()
 
@@ -389,7 +390,7 @@ if __name__ == "__main__":
         predict_py = np.argmax(result_py, axis=1)
         
         scores = result_py[0].astype(np.float32)
-        probs_py = numpy_softmax(scores)
+        probs_py = numpy_softmax(scores, TEMPERATURE)
 
         top_idxs_py = np.argsort(scores)[-3:][::-1]
 
