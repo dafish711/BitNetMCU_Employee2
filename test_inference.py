@@ -286,7 +286,7 @@ if __name__ == "__main__":
                 second_conf = float(second_confidence[b].cpu().item())
                 
                 third_idx = int(third_predicted [b].cpu().item())
-                third_conf = float (third_confidence [b].cpu.item())
+                third_conf = float (third_confidence [b].cpu().item())
                 
                 accepted = conf >= CONF_THRESHOLD
                 shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
