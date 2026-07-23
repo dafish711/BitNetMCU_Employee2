@@ -394,6 +394,10 @@ if __name__ == "__main__":
 
         pred_idx = int(top_idxs_py[0])
         conf = float(probs_py[pred_idx])
+        
+        top_score = float(scores[pred_idx])
+        second_score = float(scores[second_idx])
+        third_score = float(scores[third_idx])
 
         second_idx = int(top_idxs_py[1])
         second_conf = float(probs_py[second_idx])
@@ -412,6 +416,7 @@ if __name__ == "__main__":
             "true_class": idx_to_class[true_idx],
             "pred_class": idx_to_class[pred_idx],
             "confidence": conf,
+            "score": top_score,
             "second_class": idx_to_class[second_idx],
             "second_confidence": second_conf,
             "third_class": idx_to_class [third_idx],
