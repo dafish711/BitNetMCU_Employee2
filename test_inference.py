@@ -388,6 +388,7 @@ if __name__ == "__main__":
         result_py = quantized_model.inference_quantized(input_flat)
         predict_py = np.argmax(result_py, axis=1)
         
+        scores = result_py[0]
         probs_py = numpy_softmax(result_py[0])
         top_idxs_py = np.argsort(probs_py)[::-1][:3]
 
@@ -436,10 +437,11 @@ if __name__ == "__main__":
             f"{row['sample_index']:03d} "
             f"True:{row['true_class']} "
             f"Pred:{row['pred_class']} "
+            f"Score:{row['score']:.0f} "
             f"Conf:{row['confidence'] * 100:.1f}% "
-            f"Second:{row['second_class']} {row['second_confidence'] * 100:.1f}% "
-            f"Third:{row['third_class']} {row['third_confidence'] * 100:.1f}%"
-            f"Show:{row['shown_class']} "
+            f"Second:{row['second_class']} Score2:{row['second_score']:.0f} "
+            f"Third:{row['third_class']} Score3:{row['third_score']:.0f} "
+            f"Margin:{row['margin']:.0f} "
             f"{'OK' if row['correct'] else 'WRONG'}"
         )
 
