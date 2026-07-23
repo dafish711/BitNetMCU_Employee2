@@ -387,30 +387,24 @@ if __name__ == "__main__":
         labels_np = labels.cpu().numpy()
 
         result_py = quantized_model.inference_quantized(input_flat)
-        predict_py = np.argmax(result_py, axis=1)
+        # predict_py = np.argmax(result_py, axis=1)
         
         scores = result_py[0].astype(np.float32)
         probs_py = numpy_softmax(scores, TEMPERATURE)
 
-        top_idxs_py = np.argsort(scores)[-3:][::-1]
-
-        pred_idx = int(top_idxs_py[0])
-        second_idx = int(top_idxs_py[1])
-        third_idx = int(top_idxs_py[2])
-
-        top_score = float(scores[pred_idx])
-        second_score = float(scores[second_idx])
-        third_score = float(scores[third_idx])
-
+        pred_idx = int(np.argmax(scores))
         conf = float(probs_py[pred_idx])
-        second_conf = float(probs_py[second_idx])
-        third_conf = float(probs_py[third_idx])
-
-        margin = top_score - second_score
 
         accepted = conf >= CONF_THRESHOLD
         shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
-        
+
+        all_scores = " ".join(
+            f"{idx_to_class[i]}:{scores[i]:.0f}" for i in range(len(scores))
+        )
+        all_probs = " ".join(
+            f"{idx_to_class[i]}:{probs_py[i] * 100:.1f}%" for i in range(len(probs_py))
+        )
+                
         true_idx = int(labels_np[0])
         # pred_idx = int(predict_py[0])
 
@@ -419,20 +413,14 @@ if __name__ == "__main__":
             "true_class": idx_to_class[true_idx],
             "pred_class": idx_to_class[pred_idx],
             "confidence": conf,
-            "score": top_score,
-            "second_score": second_score,
-            "third_score": third_score,
-            "second_class": idx_to_class[second_idx],
-            "second_confidence": second_conf,
-            "third_class": idx_to_class [third_idx],
-            "third_confidence": third_conf,
-            "margin": margin,
             "accepted": accepted,
             "shown_class": shown_class,
+            "all_scores": all_scores,
+            "all_probs": all_probs,
             "correct": true_idx == pred_idx,
         })
 
-        if predict_py[0] == labels_np[0]:
+        if pred_idx == labels_np[0]:
             correct_py += 1
 
         counter += 1
@@ -448,11 +436,10 @@ if __name__ == "__main__":
             f"True:{row['true_class']} "
             f"Pred:{row['pred_class']} "
             f"Conf:{row['confidence'] * 100:.1f}% "
-            f"Score:{row['score']:.0f} "
-            f"Second:{row['second_class']} Score2:{row['second_score']:.0f} "
-            f"Third:{row['third_class']} Score3:{row['third_score']:.0f} "
-            f"Margin:{row['margin']:.0f} "
-            f"{'OK' if row['correct'] else 'WRONG'}"
+            f"Show:{row['shown_class']} "
+            f"{'OK' if row['correct'] else 'WRONG'} "
+            f"Scores:[{row['all_scores']}] "
+            f"Probs:[{row['all_probs']}]"
         )
 
     if args.skip_c:
