@@ -20,7 +20,7 @@ network_width2: 64
 network_width3: 0
 cnn_width: 64
 
-num_epochs: 100
+num_epochs: 150
 batch_size: 8
 learning_rate: 0.0005
 # can try lower
@@ -54,7 +54,7 @@ prune_groupstoprune: 32
 prune_totalgroups: 96
 
 maxw_algo: octav
-maxw_update_until_epoch: 70
+maxw_update_until_epoch: 105
 maxw_quantscale: 0.25
 
 # mean: 0.1307
