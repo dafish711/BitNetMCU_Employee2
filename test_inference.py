@@ -11,6 +11,12 @@ import argparse
 import yaml
 import importlib
 
+CONF_THRESHOLD = 0.50
+
+def numpy_softmax (scores):
+    scores = np.asarray (scores, dtype = np.float32)
+    exp_scores = np.exp(scores - np.max(scores))
+    return exp_scores/exp_scores.sum()
 
 def create_run_name(hyperparameters):
     runname = (
@@ -257,7 +263,16 @@ if __name__ == "__main__":
 
             outputs = model(images)
             probabilities = torch.softmax(outputs, dim=1)
-            confidence, predicted = torch.max(probabilities, 1)
+            # confidence, predicted = torch.max(probabilities, 1)
+            top_probs, top_idxs = torch.topk(probabilities, k=2, dim = 1)
+            
+            confidence = top_probs [:, 0]
+            predicted = top_idxs [:, 0]
+            second_confidence = top_probs [:, 1]
+            second_predicted = top_idxs [:, 1]
+            third_confidence = top_probs [:, 2]
+            third_predicted = top_idxs [:, 2]
+            
 
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
@@ -266,6 +281,15 @@ if __name__ == "__main__":
                 true_idx = int(labels[b].cpu().item())
                 pred_idx = int(predicted[b].cpu().item())
                 conf = float(confidence[b].cpu().item())
+                
+                second_idx = int(second_predicted [b].cpu().item())
+                second_conf = float(second_confidence[b].cpu().item())
+                
+                third_idx = int(third_predicted [b].cpu().item())
+                third_conf = float (third_confidence [b].cpu.item())
+                
+                accepted = conf >= CONF_THRESHOLD
+                shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
 
                 prediction_rows.append({
                     "sample_index": sample_index,
@@ -275,6 +299,18 @@ if __name__ == "__main__":
                     "pred_class": idx_to_class[pred_idx],
                     "confidence": conf,
                     "correct": true_idx == pred_idx,
+                    
+                    "second_idx": second_idx,
+                    "second_class": idx_to_class[second_idx],
+                    "second_confidence": second_conf,
+                                        
+                    "third_idx": third_idx,
+                    "third_class": idx_to_class[third_idx],
+                    "third_confidence": third_conf,    
+                    
+                    "margin": conf - second_conf,
+                    "accepted": accepted,
+                    "shown_class": shown_class,           
                 })
 
                 sample_index += 1
@@ -310,6 +346,9 @@ if __name__ == "__main__":
             f"True:{row['true_class']} "
             f"Pred:{row['pred_class']} "
             f"Conf:{row['confidence'] * 100:.1f}% "
+            f"Second:{row['second_class']} {row['second_confidence'] * 100:.1f}% "
+            f"Third:{row['third_class']} {row['third_confidence'] * 100:.1f}% "
+            f"Show:{row['shown_class']} "
             f"{'OK' if row['correct'] else 'WRONG'}"
         )
 
@@ -340,13 +379,36 @@ if __name__ == "__main__":
         result_py = quantized_model.inference_quantized(input_flat)
         predict_py = np.argmax(result_py, axis=1)
         
+        probs_py = numpy_softmax(result_py[0])
+        top_idxs_py = np.argsort(probs_py)[::-1][:2]
+
+        pred_idx = int(top_idxs_py[0])
+        conf = float(probs_py[pred_idx])
+
+        second_idx = int(top_idxs_py[1])
+        second_conf = float(probs_py[second_idx])
+        
+        third_idx = int(top_idxs_py[2])
+        third_conf = float (probs_py [2])
+
+        accepted = conf >= CONF_THRESHOLD
+        shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
+        
         true_idx = int(labels_np[0])
-        pred_idx = int(predict_py[0])
+        # pred_idx = int(predict_py[0])
 
         quantized_prediction_rows.append({
             "sample_index": counter,
             "true_class": idx_to_class[true_idx],
             "pred_class": idx_to_class[pred_idx],
+            "confidence": conf,
+            "second_class": idx_to_class[second_idx],
+            "second_confidence": second_conf,
+            "third_class": idx_to_class [third_idx],
+            "third_confidence": third_conf,
+            "margin": conf - second_conf,
+            "accepted": accepted,
+            "shown_class": shown_class,
             "correct": true_idx == pred_idx,
         })
 
@@ -365,6 +427,10 @@ if __name__ == "__main__":
             f"{row['sample_index']:03d} "
             f"True:{row['true_class']} "
             f"Pred:{row['pred_class']} "
+            f"Conf:{row['confidence'] * 100:.1f}% "
+            f"Second:{row['second_class']} {row['second_confidence'] * 100:.1f}% "
+            f"Third:{row['third_class']} {row['third_confidence'] * 100:.1f}%"
+            f"Show:{row['shown_class']} "
             f"{'OK' if row['correct'] else 'WRONG'}"
         )
 
