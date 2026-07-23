@@ -388,22 +388,24 @@ if __name__ == "__main__":
         result_py = quantized_model.inference_quantized(input_flat)
         predict_py = np.argmax(result_py, axis=1)
         
-        scores = result_py[0]
-        probs_py = numpy_softmax(result_py[0])
-        top_idxs_py = np.argsort(scores)[::-1][:3]
+        scores = result_py[0].astype(np.float32)
+        probs_py = numpy_softmax(scores)
+
+        top_idxs_py = np.argsort(scores)[-3:][::-1]
 
         pred_idx = int(top_idxs_py[0])
-        conf = float(probs_py[pred_idx])
-        
+        second_idx = int(top_idxs_py[1])
+        third_idx = int(top_idxs_py[2])
+
         top_score = float(scores[pred_idx])
         second_score = float(scores[second_idx])
         third_score = float(scores[third_idx])
 
-        second_idx = int(top_idxs_py[1])
+        conf = float(probs_py[pred_idx])
         second_conf = float(probs_py[second_idx])
-        
-        third_idx = int(top_idxs_py[2])
-        third_conf = float (probs_py [third_idx])
+        third_conf = float(probs_py[third_idx])
+
+        margin = top_score - second_score
 
         accepted = conf >= CONF_THRESHOLD
         shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
@@ -423,7 +425,7 @@ if __name__ == "__main__":
             "second_confidence": second_conf,
             "third_class": idx_to_class [third_idx],
             "third_confidence": third_conf,
-            "margin": top_score - second_score,
+            "margin": margin,
             "accepted": accepted,
             "shown_class": shown_class,
             "correct": true_idx == pred_idx,
