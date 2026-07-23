@@ -417,6 +417,8 @@ if __name__ == "__main__":
             "pred_class": idx_to_class[pred_idx],
             "confidence": conf,
             "score": top_score,
+            "second_score": second_score,
+            "third_score": third_score,
             "second_class": idx_to_class[second_idx],
             "second_confidence": second_conf,
             "third_class": idx_to_class [third_idx],
