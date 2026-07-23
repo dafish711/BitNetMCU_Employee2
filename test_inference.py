@@ -389,7 +389,7 @@ if __name__ == "__main__":
         predict_py = np.argmax(result_py, axis=1)
         
         probs_py = numpy_softmax(result_py[0])
-        top_idxs_py = np.argsort(probs_py)[::-1][:2]
+        top_idxs_py = np.argsort(probs_py)[::-1][:3]
 
         pred_idx = int(top_idxs_py[0])
         conf = float(probs_py[pred_idx])
