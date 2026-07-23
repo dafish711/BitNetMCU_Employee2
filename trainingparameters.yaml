@@ -20,7 +20,7 @@ network_width2: 64
 network_width3: 0
 cnn_width: 64
 
-num_epochs: 40
+num_epochs: 150
 batch_size: 8
 learning_rate: 0.0005
 # can try lower
