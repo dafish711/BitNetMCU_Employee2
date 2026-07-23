@@ -398,7 +398,7 @@ if __name__ == "__main__":
         second_conf = float(probs_py[second_idx])
         
         third_idx = int(top_idxs_py[2])
-        third_conf = float (probs_py [2])
+        third_conf = float (probs_py [third_idx])
 
         accepted = conf >= CONF_THRESHOLD
         shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
