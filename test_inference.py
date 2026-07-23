@@ -390,7 +390,7 @@ if __name__ == "__main__":
         
         scores = result_py[0]
         probs_py = numpy_softmax(result_py[0])
-        top_idxs_py = np.argsort(probs_py)[::-1][:3]
+        top_idxs_py = np.argsort(scores)[::-1][:3]
 
         pred_idx = int(top_idxs_py[0])
         conf = float(probs_py[pred_idx])
@@ -423,7 +423,7 @@ if __name__ == "__main__":
             "second_confidence": second_conf,
             "third_class": idx_to_class [third_idx],
             "third_confidence": third_conf,
-            "margin": conf - second_conf,
+            "margin": top_score - second_score,
             "accepted": accepted,
             "shown_class": shown_class,
             "correct": true_idx == pred_idx,
