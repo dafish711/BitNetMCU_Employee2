@@ -264,7 +264,7 @@ if __name__ == "__main__":
             outputs = model(images)
             probabilities = torch.softmax(outputs, dim=1)
             # confidence, predicted = torch.max(probabilities, 1)
-            top_probs, top_idxs = torch.topk(probabilities, k=2, dim = 1)
+            top_probs, top_idxs = torch.topk(probabilities, k=3, dim = 1)
             
             confidence = top_probs [:, 0]
             predicted = top_idxs [:, 0]
