@@ -11,6 +11,13 @@ import argparse
 import yaml
 import importlib
 
+CONF_THRESHOLD = 0.50
+TEMPERATURE = 100.0
+
+def numpy_softmax (scores, temperature = 1.0):
+    scores = np.asarray (scores, dtype = np.float32)/temperature 
+    exp_scores = np.exp(scores - np.max(scores))
+    return exp_scores/exp_scores.sum()
 
 def create_run_name(hyperparameters):
     runname = (
@@ -68,8 +75,8 @@ def load_class_mapping(runname):
 
 
 def get_transform(hyperparameters):
-    mean = hyperparameters.get("mean", [0.4231])
-    std = hyperparameters.get("std", [0.1437])
+    mean = hyperparameters.get("mean", [0.1307])
+    std = hyperparameters.get("std", [0.3081])
 
     if isinstance(mean, (float, int)):
         mean = (float(mean),)
@@ -85,7 +92,7 @@ def get_transform(hyperparameters):
         transforms.Grayscale(num_output_channels=1),  # Ensure single channel for MNIST/EMNIST
         transforms.Resize((16, 16)),  # adjust if needed
         transforms.ToTensor(),
-        # transforms.Normalize(mean, std)
+        transforms.Normalize(mean, std)
     ])
 
 
@@ -115,7 +122,7 @@ def build_test_dataset(hyperparameters):
             transforms.Grayscale(num_output_channels=1),
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.Normalize((0.4231,), (0.1437,)),
+            transforms.Normalize((0.1307,), (0.3081,)),
         ])
 
         test_data = datasets.MNIST(root="data", train=False, transform=transform, download=True)
@@ -126,7 +133,7 @@ def build_test_dataset(hyperparameters):
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.Normalize((0.1307,), (0.3081,)),
+            transforms.Normalize((0.1307,), (0.3081,)),
         ])
 
         test_data = datasets.EMNIST(
@@ -144,7 +151,7 @@ def build_test_dataset(hyperparameters):
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.Normalize((0.1307,), (0.3081,)),
+            transforms.Normalize((0.1307,), (0.3081,)),
         ])
 
         test_data = datasets.EMNIST(
@@ -257,7 +264,16 @@ if __name__ == "__main__":
 
             outputs = model(images)
             probabilities = torch.softmax(outputs, dim=1)
-            confidence, predicted = torch.max(probabilities, 1)
+            # confidence, predicted = torch.max(probabilities, 1)
+            top_probs, top_idxs = torch.topk(probabilities, k=3, dim = 1)
+            
+            confidence = top_probs [:, 0]
+            predicted = top_idxs [:, 0]
+            second_confidence = top_probs [:, 1]
+            second_predicted = top_idxs [:, 1]
+            third_confidence = top_probs [:, 2]
+            third_predicted = top_idxs [:, 2]
+            
 
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
@@ -266,6 +282,15 @@ if __name__ == "__main__":
                 true_idx = int(labels[b].cpu().item())
                 pred_idx = int(predicted[b].cpu().item())
                 conf = float(confidence[b].cpu().item())
+                
+                second_idx = int(second_predicted [b].cpu().item())
+                second_conf = float(second_confidence[b].cpu().item())
+                
+                third_idx = int(third_predicted [b].cpu().item())
+                third_conf = float (third_confidence [b].cpu().item())
+                
+                accepted = conf >= CONF_THRESHOLD
+                shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
 
                 prediction_rows.append({
                     "sample_index": sample_index,
@@ -275,6 +300,18 @@ if __name__ == "__main__":
                     "pred_class": idx_to_class[pred_idx],
                     "confidence": conf,
                     "correct": true_idx == pred_idx,
+                    
+                    "second_idx": second_idx,
+                    "second_class": idx_to_class[second_idx],
+                    "second_confidence": second_conf,
+                                        
+                    "third_idx": third_idx,
+                    "third_class": idx_to_class[third_idx],
+                    "third_confidence": third_conf,    
+                    
+                    "margin": conf - second_conf,
+                    "accepted": accepted,
+                    "shown_class": shown_class,           
                 })
 
                 sample_index += 1
@@ -295,6 +332,15 @@ if __name__ == "__main__":
                 "pred_idx",
                 "pred_class",
                 "confidence",
+                "second_idx",
+                "second_class",
+                "second_confidence",
+                "third_idx",
+                "third_class",
+                "third_confidence",
+                "margin",
+                "accepted",
+                "shown_class",
                 "correct",
             ],
         )
@@ -303,13 +349,16 @@ if __name__ == "__main__":
 
     print(f"Saved predictions: {csv_path}")
 
-    print("\nFirst predictions:")
-    for row in prediction_rows[:20]:
+    print("\nPredictions:")
+    for row in prediction_rows:
         print(
             f"{row['sample_index']:03d} "
             f"True:{row['true_class']} "
             f"Pred:{row['pred_class']} "
             f"Conf:{row['confidence'] * 100:.1f}% "
+            f"Second:{row['second_class']} {row['second_confidence'] * 100:.1f}% "
+            f"Third:{row['third_class']} {row['third_confidence'] * 100:.1f}% "
+            f"Show:{row['shown_class']} "
             f"{'OK' if row['correct'] else 'WRONG'}"
         )
 
@@ -329,6 +378,7 @@ if __name__ == "__main__":
 
     counter = 0
     correct_py = 0
+    quantized_prediction_rows = []
 
     test_loader2 = DataLoader(test_data, batch_size=1, shuffle=False)
 
@@ -337,9 +387,40 @@ if __name__ == "__main__":
         labels_np = labels.cpu().numpy()
 
         result_py = quantized_model.inference_quantized(input_flat)
-        predict_py = np.argmax(result_py, axis=1)
+        # predict_py = np.argmax(result_py, axis=1)
+        
+        scores = result_py[0].astype(np.float32)
+        probs_py = numpy_softmax(scores, TEMPERATURE)
 
-        if predict_py[0] == labels_np[0]:
+        pred_idx = int(np.argmax(scores))
+        conf = float(probs_py[pred_idx])
+
+        accepted = conf >= CONF_THRESHOLD
+        shown_class = idx_to_class[pred_idx] if accepted else "INVALID"
+
+        all_scores = " ".join(
+            f"{idx_to_class[i]}:{scores[i]:.0f}" for i in range(len(scores))
+        )
+        all_probs = " ".join(
+            f"{idx_to_class[i]}:{probs_py[i] * 100:.1f}%" for i in range(len(probs_py))
+        )
+                
+        true_idx = int(labels_np[0])
+        # pred_idx = int(predict_py[0])
+
+        quantized_prediction_rows.append({
+            "sample_index": counter,
+            "true_class": idx_to_class[true_idx],
+            "pred_class": idx_to_class[pred_idx],
+            "confidence": conf,
+            "accepted": accepted,
+            "shown_class": shown_class,
+            "all_scores": all_scores,
+            "all_probs": all_probs,
+            "correct": true_idx == pred_idx,
+        })
+
+        if pred_idx == labels_np[0]:
             correct_py += 1
 
         counter += 1
@@ -347,6 +428,19 @@ if __name__ == "__main__":
     print("size of test data:", counter)
     print(f"Mispredictions Python quantized: {counter - correct_py}")
     print("Overall accuracy Python quantized:", correct_py / counter * 100, "%")
+    
+    print("\nQuantized predictions:")
+    for row in quantized_prediction_rows:
+        print(
+            f"{row['sample_index']:03d} "
+            f"True:{row['true_class']} "
+            f"Pred:{row['pred_class']} "
+            f"Conf:{row['confidence'] * 100:.1f}% "
+            f"Show:{row['shown_class']} "
+            f"{'OK' if row['correct'] else 'WRONG'} "
+            f"Scores:[{row['all_scores']}] "
+            f"Probs:[{row['all_probs']}]"
+        )
 
     if args.skip_c:
         print("Skipped C DLL inference check.")

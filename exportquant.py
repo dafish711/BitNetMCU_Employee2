@@ -88,15 +88,12 @@ def export_to_hfile(quantized_model, filename, runname, modelname=''):
                 weights = np.array(layer_info['quantized_weights'])
                 quantization_type = layer_info['quantization_type']
 
-                if (bpw * incoming_weights % 32) != 0:
-                    raise ValueError(f"Size mismatch: Incoming weights must be packed to 32bit boundary. Incoming weights: {incoming_weights} Bit per weight: {bpw} Total bits: {bpw * incoming_weights}")
-
                 print(f'Layer: {layer} Quantization type: <{quantization_type}>, Bits per weight: {bpw}, Num. incoming: {incoming_weights},  Num outgoing: {outgoing_weights}')
 
                 data_type = np.uint32
 
                 if quantization_type == 'Binary':
-                    encoded_weights = np.where(weights == -1, 0, 1)
+                    encoded_weights = np.where(weights == -1, 0, 1).astype(data_type)
                     QuantID = 1
                 elif quantization_type == '2bitsym':
                     encoded_weights = ((weights < 0).astype(data_type) << 1) | (np.floor(np.abs(weights))).astype(data_type)
@@ -165,12 +162,26 @@ def export_to_hfile(quantized_model, filename, runname, modelname=''):
                 else:
                     print(f'Skipping layer {layer} with quantization type {quantization_type} and {bpw} bits per weight. Quantization type not supported.')
                     continue
+                
+                pack_bpw = QuantID if quantization_type == "Binary" else bpw
+                
+                if (pack_bpw * incoming_weights % 32) != 0:
+                    raise ValueError(f"Size mismatch: Incoming weights must be packed to 32bit boundary. Incoming weights: {incoming_weights} Bit per weight: {bpw} Total bits: {bpw * incoming_weights}")
 
-                weight_per_word = 32 // bpw
+                weight_per_word = 32 // pack_bpw
                 reshaped_array = encoded_weights.reshape(-1, weight_per_word)
 
-                bit_positions = 32 - bpw - np.arange(weight_per_word, dtype=data_type) * bpw
-                packed_weights = np.bitwise_or.reduce(reshaped_array << bit_positions, axis=1).view(data_type)
+                bit_positions = 32 - pack_bpw - np.arange(weight_per_word, dtype=data_type) * pack_bpw
+                packed_weights = np.bitwise_or.reduce(
+                    reshaped_array << bit_positions, 
+                    axis=1
+                ).astype(data_type)
+                
+                print(
+                    f"{layer}: quant={quantization_type}, bpw={bpw}, QuantID={QuantID}, "
+                    f"pack_bpw={pack_bpw}, weights.shape={weights.shape}, "
+                    f"encoded.shape={encoded_weights.shape}, packed_words={packed_weights.size}"
+                )
 
                 f.write(f'// Layer: {layer}\n')
                 f.write(f'// QuantType: {quantization_type}\n')
@@ -412,8 +423,8 @@ if __name__ == '__main__':
         if not os.path.isdir(test_folder):
             raise FileNotFoundError(f"Testing folder not found: {test_folder}")
 
-        mean = hyperparameters.get("mean", [0.4231])
-        std = hyperparameters.get("std", [0.1437])
+        mean = hyperparameters.get("mean", [0.1307])
+        std = hyperparameters.get("std", [0.3081])
         
         # ensure tuple of floats
         if isinstance(mean, (float, int)):
@@ -430,7 +441,7 @@ if __name__ == '__main__':
             transforms.Grayscale(num_output_channels=1),
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.Normalize(mean, std)
+            transforms.Normalize(mean, std)
         ])
 
         test_data = datasets.ImageFolder(root=test_folder, transform=transform)
@@ -446,12 +457,12 @@ if __name__ == '__main__':
 
     elif dataset_name == "MNIST":
         num_classes = 10
-        mean, std = (0.4231,), (0.1437,)
+        mean, std = (0.1307,), (0.3081,)
 
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.Normalize(mean, std)
+            transforms.Normalize(mean, std)
         ])
 
         test_data = datasets.MNIST(
@@ -492,7 +503,7 @@ if __name__ == '__main__':
         transform = transforms.Compose([
             transforms.Resize((16, 16)),
             transforms.ToTensor(),
-            # transforms.Normalize(mean, std)
+            transforms.Normalize(mean, std)
         ])
 
         test_data = EMNIST(
